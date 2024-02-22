@@ -6,7 +6,7 @@ import torch
 import wandb
 from monai.metrics.meandice import compute_dice
 
-from XrayTo3DShape import post_transform
+from ..transforms import post_transform
 
 from ..utils import reproject, to_numpy
 

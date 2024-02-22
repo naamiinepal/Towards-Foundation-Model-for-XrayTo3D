@@ -1,5 +1,4 @@
-from rich_utils import *
-
+from .rich_utils import *
 from .callbacks import *
 from .config_template import config_template
 from .config_utils import *
