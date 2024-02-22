@@ -9,3 +9,4 @@ from .config_utils import *
 from .config_template import config_template
 from .enums import *
 from .verse_metadata import *
+from rich_utils import *
