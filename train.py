@@ -63,7 +63,7 @@ def parse_training_arguments():
     parser.add_argument("--debug", default=False, action="store_true")
 
     parser.add_argument("--tags", nargs="*")
-    parser.add_argument("--wandb-project", default="2d-3d-benchmark")
+    parser.add_argument("--wandb-project", default="2d-3d-foundation-model")
 
     parser.add_argument("--lambda_bce", default=1.0)
     parser.add_argument("--lambda_dice", default=1.0)
@@ -240,6 +240,8 @@ if __name__ == "__main__":
         "MODEL_NAME": model_name,
         "LOSS": LOSS_NAME,
         "EXPERIMENT_NAME": experiment_name,
+        "TRAIN_CSV":args.trainpaths,
+        "VAL_CSV":args.valpaths
     }
     HYPERPARAMS.update(MODEL_CONFIG)
     wandb_logger.log_hyperparams(HYPERPARAMS)
