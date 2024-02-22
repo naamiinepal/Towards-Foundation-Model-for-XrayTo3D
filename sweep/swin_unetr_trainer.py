@@ -1,10 +1,11 @@
-"""SwinUNETR trainer"""
+"""SwinUNETR trainer."""
 
 import argparse
 import os
 import sys
 
 import pytorch_lightning as pl
+import wandb
 from monai.networks.nets.swin_unetr import SwinUNETR
 from monai.utils.misc import set_determinism
 from pytorch_lightning import seed_everything
@@ -12,16 +13,21 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 from torch.optim import Adam
 from torch.utils.data.dataloader import DataLoader
 
-import wandb
 import XrayTo3DShape
-from XrayTo3DShape import (BaseExperiment, anatomy_resolution_dict,
-                           get_anatomy_from_path, get_dataset, get_loss,
-                           get_transform_from_model_name,
-                           model_experiment_dict, printarr)
+from XrayTo3DShape import (
+    BaseExperiment,
+    anatomy_resolution_dict,
+    get_anatomy_from_path,
+    get_dataset,
+    get_loss,
+    get_transform_from_model_name,
+    model_experiment_dict,
+    printarr,
+)
 
 
 def parse_training_arguments():
-    """parse arguments"""
+    """Parse arguments."""
     parser = argparse.ArgumentParser()
     # swinunetr specific arguments
     parser.add_argument("--num_heads", type=str)
@@ -52,7 +58,7 @@ def parse_training_arguments():
 
 
 def update_args(args):
-    """update args"""
+    """Update args."""
     args.anatomy = get_anatomy_from_path(args.trainpaths)
 
     # assert the resolution and size agree for each anatomy
@@ -69,12 +75,13 @@ def update_args(args):
     if args.num_heads == "progressive":
         args.num_heads_val = (3, 6, 12, 24)
 
-    if args.feature_size == 'small':
+    if args.feature_size == "small":
         args.feature_size_val = 12
-    if args.feature_size == 'default':
+    if args.feature_size == "default":
         args.feature_size_val = 24
-    if args.feature_size == 'large':
+    if args.feature_size == "large":
         args.feature_size_val = 48
+
 
 if __name__ == "__main__":
     args = parse_training_arguments()

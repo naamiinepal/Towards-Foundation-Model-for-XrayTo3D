@@ -1,11 +1,10 @@
-"""generate evaluation script"""
-import sys
+"""Generate evaluation script."""
 import argparse
+import sys
+
 import wandb
-from XrayTo3DShape import (
-    filter_wandb_run,
-    get_run_from_model_name,
-)
+
+from XrayTo3DShape import filter_wandb_run, get_run_from_model_name
 
 expt_dict = {
     "OneDConcat": "ParallelHeadsExperiment",

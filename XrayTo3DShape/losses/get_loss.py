@@ -1,4 +1,4 @@
-"""interface for losses zoo"""
+"""Interface for losses zoo."""
 import torch
 from monai.losses.dice import DiceLoss
 from torch.nn import BCELoss, BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
@@ -10,8 +10,7 @@ pos_weights_dict = {"hip": 719, "femur": 612, "vertebra": 23, "ribs": 5231, "rib
 
 
 def get_loss(loss_name, **kwargs):
-    """given name of loss and passed arguments,
-    return a callable loss function"""
+    """Given name of loss and passed arguments, return a callable loss function."""
     if loss_name == MSELoss.__name__:
         return MSELoss()
     if loss_name == BCEWithLogitsLoss.__name__:
@@ -33,27 +32,21 @@ def get_loss(loss_name, **kwargs):
 
 
 def get_WCE(anatomy, image_size):
-    """Weighted cross-entropy loss"""
-    pos_weight = torch.full(
-        [1, image_size, image_size, image_size], pos_weights_dict[anatomy]
-    )
+    """Weighted cross-entropy loss."""
+    pos_weight = torch.full([1, image_size, image_size, image_size], pos_weights_dict[anatomy])
     return BCEWithLogitsLoss(pos_weight=pos_weight)
 
 
 def get_CE(anatomy, image_size):
-    """Regular cross-entropy loss"""
+    """Regular cross-entropy loss."""
     # pos_weight = torch.full([1,image_size,image_size,image_size],pos_weights_dict[anatomy])
     # return CrossEntropyLoss(weight=pos_weight)
     return CrossEntropyLoss()
 
 
-def get_DiceCE(
-    anatomy, image_size, sigmoid=True, softmax=False, lambda_dice=1.0, lambda_bce=1.0
-):
-    """Dice+CE Loss"""
-    pos_weight = torch.full(
-        [1, image_size, image_size, image_size], pos_weights_dict[anatomy]
-    )
+def get_DiceCE(anatomy, image_size, sigmoid=True, softmax=False, lambda_dice=1.0, lambda_bce=1.0):
+    """Dice+CE Loss."""
+    pos_weight = torch.full([1, image_size, image_size, image_size], pos_weights_dict[anatomy])
     return DiceCELoss(
         softmax=softmax,
         sigmoid=sigmoid,
@@ -64,5 +57,5 @@ def get_DiceCE(
 
 
 def l1_loss(latent_vector: torch.Tensor):
-    """L1-regularization loss"""
+    """L1-regularization loss."""
     return torch.mean(torch.abs(latent_vector))

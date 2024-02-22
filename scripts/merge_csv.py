@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+
 from XrayTo3DShape import get_anatomy_from_path
 
 csv_dir = "results/challengeR/"

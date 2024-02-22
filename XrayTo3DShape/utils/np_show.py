@@ -1,4 +1,4 @@
-"""utils to visualize numpy volume"""
+"""Utils to visualize numpy volume."""
 import math
 
 import numpy as np
@@ -6,23 +6,21 @@ from matplotlib import pyplot as plt
 
 from .np_utils import get_projectionslices_from_3d
 
-
 MODEL_LABEL_COLOR = {
-    'UNETR':'#00b945',
-    'AttentionUnet':'#ff9500',
-    'UNet':'#ff2c00',
-    'MultiScale2DPermuteConcat':'#845b97',
-    'TwoDPermuteConcat':'#474747',
-    'OneDConcat':'#9e9e9e',
-    'SwinUNETR':'#0c5da5',
-    'TL-Embedding':'#f8de22',
-    'TLPredictor':'#f8de22',
-    
+    "UNETR": "#00b945",
+    "AttentionUnet": "#ff9500",
+    "UNet": "#ff2c00",
+    "MultiScale2DPermuteConcat": "#845b97",
+    "TwoDPermuteConcat": "#474747",
+    "OneDConcat": "#9e9e9e",
+    "SwinUNETR": "#0c5da5",
+    "TL-Embedding": "#f8de22",
+    "TLPredictor": "#f8de22",
 }
 
+
 def display_projection_slices_from_3d(image: np.ndarray):
-    """create matplotlib figure showing projection of 3D volume 
-    along the three orthogonal axis"""
+    """Create matplotlib figure showing projection of 3D volume along the three orthogonal axis."""
     image_list = get_projectionslices_from_3d(image)
     fig, axes = create_figure(*image_list)
     for ax, npa in zip(axes, image_list):

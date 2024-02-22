@@ -1,4 +1,4 @@
-"""custom losses """
+"""Custom losses."""
 from typing import Optional
 
 import torch
@@ -8,16 +8,13 @@ from torchmetrics.functional import image_gradients
 
 
 class NGCCLoss(nn.Module):
-    """
-    Normalized Gradient Cross-Correlation (NGCC)
-     calculates 1-NGCC
-    """
+    """Normalized Gradient Cross-Correlation (NGCC) calculates 1-NGCC."""
 
     def __init__(self) -> None:
         super().__init__()
 
     def forward(self, net_output: Tensor, gt: Tensor):
-        """the input tensors should be 4D torch Tensor #BCHW"""
+        """The input tensors should be 4D torch Tensor #BCHW."""
         net_out_dy, net_out_dx = image_gradients(net_output)
         gt_dy, gt_dx = image_gradients(gt)
         tensor_size = torch.prod(torch.tensor([gt_dy.shape]))
@@ -31,6 +28,7 @@ class NGCCLoss(nn.Module):
 
 class DiceCELoss(nn.Module):
     """TODO: debug: does not train well"""
+
     def __init__(
         self,
         softmax: bool = False,
@@ -67,8 +65,6 @@ class DiceCELoss(nn.Module):
 
         dice_loss = self.dice(batch_input, batch_target)
         ce_loss = self.bce(batch_input, batch_target)
-        total_loss: torch.Tensor = (
-            self.lambda_dice * dice_loss + self.lambda_bce * ce_loss
-        )
+        total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_bce * ce_loss
 
         return total_loss

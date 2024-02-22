@@ -1,17 +1,20 @@
-"""utils for i/o operations"""
-from pathlib import Path
-import SimpleITK as sitk
-import numpy as np
+"""Utils for i/o operations."""
 import json
+from pathlib import Path
+
+import numpy as np
+import SimpleITK as sitk
+
 
 def load_json(fp):
     with open(fp) as f:
         data = json.load(f)
     return data
 
+
 def get_nifti_stem(path) -> str:
-    """
-    '/home/user/image.nii.gz' -> 'image'
+    """'/home/user/image.nii.gz' -> 'image'.
+
     1.3.6.1.4.1.14519.5.2.1.6279.6001.905371958588660410240398317235.nii.gz
     ->
     1.3.6.1.4.1.14519.5.2.1.6279.6001.905371958588660410240398317235
@@ -25,7 +28,7 @@ def get_nifti_stem(path) -> str:
 
 
 def to_numpy(x) -> np.ndarray:
-    """detach and convert torch tensor to numpy"""
+    """Detach and convert torch tensor to numpy."""
     try:
         return x.detach().cpu().numpy()
     except AttributeError:
@@ -33,7 +36,7 @@ def to_numpy(x) -> np.ndarray:
 
 
 def write_image(img, out_path, pixeltype=None):
-    """wrap simpleitk WriteImage"""
+    """Wrap simpleitk WriteImage."""
     if isinstance(out_path, Path):
         out_path = str(out_path)
     if pixeltype:
@@ -41,8 +44,8 @@ def write_image(img, out_path, pixeltype=None):
     sitk.WriteImage(img, out_path)
 
 
-def read_image(img_path)-> sitk.Image:
-    """returns the SimpleITK image read from given path
+def read_image(img_path) -> sitk.Image:
+    """Returns the SimpleITK image read from given path.
 
     Parameters:
     -----------

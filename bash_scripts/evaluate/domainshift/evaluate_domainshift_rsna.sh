@@ -11,4 +11,3 @@ python evaluate.py  --testpaths configs/paths/rsna_cervical_fracture/RSNACervica
 python evaluate.py  --testpaths configs/paths/rsna_cervical_fracture/RSNACervicalFracture-DRR-full_test.csv --gpu 0 --image_size 64 --batch_size 2 --accelerator gpu --res 1.5 --model_name UNETR --ckpt_path runs/2d-3d-benchmark/0ugb85wj/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/0ugb85wj/checkpoints/../domain_shift_rsna
 
 python evaluate.py  --testpaths configs/paths/rsna_cervical_fracture/RSNACervicalFracture-DRR-full_test.csv --gpu 0 --image_size 64 --batch_size 2 --accelerator gpu --res 1.5 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/u66dbc2b/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/u66dbc2b/checkpoints/../domain_shift_rsna
-

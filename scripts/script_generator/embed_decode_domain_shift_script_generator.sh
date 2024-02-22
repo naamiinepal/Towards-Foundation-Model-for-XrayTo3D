@@ -6,4 +6,4 @@ python scripts/generate_embed_decode_arch_domainshift_script.py --testpaths conf
 
 python scripts/generate_embed_decode_arch_domainshift_script.py --testpaths configs/domain_shift_eval/CTPelvic1k_CLINIC-METAL-hips-DRR-full.csv   --gpu 0 --batch_size 8 --img_size 128 --res 2.25 --domain_shift_dataset clinic_metal> bash_scripts/evaluate/domainshift/evaluate_CTPelvic1k_clinic_metal_hips_dropout_embed_decode.sh
 
-python scripts/generate_embed_decode_arch_domainshift_script.py --testpaths configs/domain_shift_eval/CTPelvic1k_kits-hips-DRR-full.csv   --gpu 0 --batch_size 8 --img_size 128 --res 2.25 --domain_shift_dataset kits> bash_scripts/evaluate/domainshift/evaluate_CTPelvic1k_kits_hips_dropout_embed_decode.sh 
+python scripts/generate_embed_decode_arch_domainshift_script.py --testpaths configs/domain_shift_eval/CTPelvic1k_kits-hips-DRR-full.csv   --gpu 0 --batch_size 8 --img_size 128 --res 2.25 --domain_shift_dataset kits> bash_scripts/evaluate/domainshift/evaluate_CTPelvic1k_kits_hips_dropout_embed_decode.sh

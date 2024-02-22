@@ -1,7 +1,7 @@
-"""
-adapted from monai.networks.nets.varautoencoder
-The original Autoencoder in the monai.networks.nets.autoencoder does not have a
-1D bottlneck latent vector layer i.e. it is fully convolutional.
+"""Adapted from monai.networks.nets.varautoencoder The original Autoencoder in the
+monai.networks.nets.autoencoder does not have a 1D bottleneck latent vector layer i.e. it is fully
+convolutional.
+
 In our application we need a low-dimensional  1D embedding of the Biplanar x-rays,
 hence the need for full connected layer in between the encoder and the decoder
 TODO: investigate loss in reconstruction when using 1D-latent vector instead of fully conv-AE
@@ -19,9 +19,8 @@ from torch import nn
 
 
 class CustomAutoEncoder(AutoEncoder):
-    """Simple encoder consisting of multiple layers of Convolutions
-    and a fully connected layer in the end to obtain a 1D embedding vector
-    """
+    """Simple encoder consisting of multiple layers of Convolutions and a fully connected layer in
+    the end to obtain a 1D embedding vector."""
 
     def __init__(
         self,
@@ -122,7 +121,7 @@ class CustomAutoEncoder(AutoEncoder):
 
 
 class TLPredictor(nn.Module):
-    """Generate 2D Embedding vector"""
+    """Generate 2D Embedding vector."""
 
     def __init__(
         self,

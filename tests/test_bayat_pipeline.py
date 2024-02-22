@@ -1,12 +1,12 @@
 import pandas as pd
 import torch
+import wandb
 from monai.losses.dice import DiceLoss
 from monai.metrics.meandice import DiceMetric
 from monai.transforms.compose import Compose
-from monai.transforms.post.array import AsDiscrete, Activations
+from monai.transforms.post.array import Activations, AsDiscrete
 from torch.utils.data import DataLoader
 
-import wandb
 from XrayTo3DShape import BaseDataset, TwoDPermuteConcat, get_nonkasten_transforms
 
 lr = 1e-2
@@ -20,9 +20,7 @@ paths_location = "configs/test/Verse2020-DRR-test.csv"
 paths = pd.read_csv(paths_location, index_col=0).to_numpy()
 paths = [{"ap": ap, "lat": lat, "seg": seg} for ap, lat, seg in paths]
 
-ds = BaseDataset(
-    data=paths, transforms=get_nonkasten_transforms(size=64, resolution=1.5)
-)
+ds = BaseDataset(data=paths, transforms=get_nonkasten_transforms(size=64, resolution=1.5))
 data_loader = DataLoader(ds, batch_size=1)
 ap, lat, seg = next(iter(data_loader))
 ap_tensor, lat_tensor, seg_tensor = ap["ap"], lat["lat"], seg["seg"]

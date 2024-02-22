@@ -25,9 +25,7 @@ if __name__ == "__main__":
     ap_paths, lat_paths, seg_paths = [], [], []
     for subject_id in subject_list:
         derivatives_path = (
-            Path(config.subjects.subject_basepath).resolve()
-            / f"{subject_id}"
-            / "derivatives"
+            Path(config.subjects.subject_basepath).resolve() / f"{subject_id}" / "derivatives"
         )
         xray_basepath = derivatives_path / "xray_from_ct"
         seg_roi_basepath = derivatives_path / "seg_roi"

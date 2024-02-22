@@ -1,4 +1,4 @@
-""" 
+"""
     Author: Nicholas Sharp (nmwsharp.com)
     Canonical source: https://gist.github.com/nmwsharp/54d04af87872a4988809f128e1a1d233
     License: This snippet may be used under an MIT license, and it is also released into the public domain.
@@ -8,12 +8,13 @@
 """
 
 import inspect
+
 from monai.data.meta_tensor import MetaTensor
 
 
 def printarr(*arrs, float_width=6):
-    """
-    Print a pretty table giving name, shape, dtype, type, and content information for input tensors or scalars.
+    """Print a pretty table giving name, shape, dtype, type, and content information for input
+    tensors or scalars.
 
     Call like: printarr(my_arr, some_other_arr, maybe_a_scalar). Accepts a variable number of arguments.
 
@@ -147,7 +148,7 @@ def printarr(*arrs, float_width=6):
         print(header_str)
         print("-" * len(header_str))
 
-        # now print the acual arrays
+        # now print the actual arrays
         for strp in str_props:
             for p in props:
                 prefix = "" if p == "name" else " | "

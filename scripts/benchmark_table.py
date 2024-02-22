@@ -1,10 +1,10 @@
 import json
 import sys
+
 import numpy as np
-
 import pandas as pd
-
 import wandb
+
 from XrayTo3DShape import filter_wandb_run, get_run_from_model_name
 
 if __name__ == "__main__":
@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("--anatomy", required=True)
     parser.add_argument("--domain_shift", default=False, action="store_true")
     parser.add_argument("--domain_shift_dataset")
-    parser.add_argument('--patch',default=False,action='store_true')
+    parser.add_argument("--patch", default=False, action="store_true")
     parser.add_argument("--tags", nargs="*")
     parser.add_argument("--save_json", default=False, action="store_true")
     args = parser.parse_args()
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     if args.domain_shift:
         subdir = f"domain_shift_{args.domain_shift_dataset}"
     elif args.patch:
-        subdir = 'combined_patches'
+        subdir = "combined_patches"
     else:
         subdir = "evaluation"
     EVAL_LOG_CSV_PATH_TEMPLATE = "/mnt/SSD0/mahesh-home/xrayto3D-benchmark/runs/2d-3d-benchmark/{run_id}/{subdir}/metric-log.csv"
@@ -69,26 +69,25 @@ if __name__ == "__main__":
         print(model)
         try:
             # we did something stupid so have to hard code here (deleted the run-id in wandb, never delete runs in wandb again)
-            if args.anatomy == 'vertebra' and model == 'TwoDPermuteConcat':
-                run_id = 'e9y5hclj'
-                csv_filename = EVAL_LOG_CSV_PATH_TEMPLATE.format(run_id = run_id, subdir=subdir)
+            if args.anatomy == "vertebra" and model == "TwoDPermuteConcat":
+                run_id = "e9y5hclj"
+                csv_filename = EVAL_LOG_CSV_PATH_TEMPLATE.format(run_id=run_id, subdir=subdir)
             else:
                 run = get_run_from_model_name(model, runs)
                 # read metric log csv
-                csv_filename = EVAL_LOG_CSV_PATH_TEMPLATE.format(
-                    run_id=run.id, subdir=subdir
-                )
-
+                csv_filename = EVAL_LOG_CSV_PATH_TEMPLATE.format(run_id=run.id, subdir=subdir)
 
             print(f"reading {csv_filename}")
             df = pd.read_csv(csv_filename)
-            df.replace([np.inf,-np.inf],np.nan,inplace=True) # replace inf with nan so that they can be dropped when aggregating later
+            df.replace(
+                [np.inf, -np.inf], np.nan, inplace=True
+            )  # replace inf with nan so that they can be dropped when aggregating later
             latex_table += latex_table_row_template.format(
                 model_name=model,
-                DSC=df.mean(numeric_only=True,skipna=True).DSC * 100,
-                HD95=df.mean(numeric_only=True,skipna=True).HD95,
-                ASD=df.mean(numeric_only=True,skipna=True).ASD,
-                NSD=df.mean(numeric_only=True,skipna=True).NSD,
+                DSC=df.mean(numeric_only=True, skipna=True).DSC * 100,
+                HD95=df.mean(numeric_only=True, skipna=True).HD95,
+                ASD=df.mean(numeric_only=True, skipna=True).ASD,
+                NSD=df.mean(numeric_only=True, skipna=True).NSD,
                 model_size=model_sizes[model],
             )
             model_dsc_dict[model] = df.mean(numeric_only=True).DSC

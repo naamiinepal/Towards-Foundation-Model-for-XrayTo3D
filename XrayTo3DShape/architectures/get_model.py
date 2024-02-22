@@ -15,7 +15,7 @@ from .twoDPermuteConcatMultiScale import MultiScale2DPermuteConcat
 
 
 def get_model(model_name, image_size, dropout=False) -> nn.Module:
-    """return encoder-decoder model"""
+    """Return encoder-decoder model."""
     if model_name in (OneDConcat.__name__, "OneDConcatModel"):
         return OneDConcat(get_1dconcatmodel_config(image_size, dropout))
 
@@ -35,9 +35,7 @@ def get_model(model_name, image_size, dropout=False) -> nn.Module:
         return Unet(spatial_dims=3, **get_unet_config(dropout))
 
     elif model_name == MultiScale2DPermuteConcat.__name__:
-        return MultiScale2DPermuteConcat(
-            get_multiscale2dconcatmodel_config(image_size, dropout)
-        )
+        return MultiScale2DPermuteConcat(get_multiscale2dconcatmodel_config(image_size, dropout))
 
     elif model_name == CustomAutoEncoder.__name__:
         return CustomAutoEncoder(**get_autoencoder_config(image_size, dropout))
@@ -49,7 +47,7 @@ def get_model(model_name, image_size, dropout=False) -> nn.Module:
 
 
 def get_model_config(model_name, image_size, dropout=False):
-    """model parameters"""
+    """Model parameters."""
     if model_name in (OneDConcat.__name__, "OneDConcatModel"):
         return get_1dconcatmodel_config(image_size, dropout)
     elif model_name == AttentionUnet.__name__:
@@ -113,7 +111,7 @@ def get_autoencoder_config(image_size, dropout):
 
 
 def get_swinunetr_config(image_size, dropout) -> Dict:
-    """these parameters were found by searching through possible model sizes"""
+    """These parameters were found by searching through possible model sizes."""
     model_config = {
         "img_size": image_size,
         "in_channels": 2,
@@ -158,9 +156,7 @@ def get_multiscale2dconcatmodel_config(image_size, dropout):
         "encoder": {
             "initial_channel": 16,
             "in_channels": [],  # this will be filled in by autoconfig
-            "out_channels": [2, 4, 8, 16, 32, 64]
-            if image_size == 128
-            else [4, 8, 16, 32, 64],
+            "out_channels": [2, 4, 8, 16, 32, 64] if image_size == 128 else [4, 8, 16, 32, 64],
             "encoder_count": 4,
             "kernel_size": 3,
             "act": "RELU",
@@ -168,9 +164,7 @@ def get_multiscale2dconcatmodel_config(image_size, dropout):
         },
         "decoder_2D": {
             "in_channels": [],  # this will be filled in by autoconfig
-            "out_channels": [4, 8, 16, 32, 64, 128]
-            if image_size == 128
-            else [4, 8, 16, 32, 64],
+            "out_channels": [4, 8, 16, 32, 64, 128] if image_size == 128 else [4, 8, 16, 32, 64],
             "kernel_size": 3,
             "act": "RELU",
             "norm": "BATCH",
@@ -290,7 +284,7 @@ def get_attunet_config(dropout):
 
 
 def get_1dconcatmodel_config(image_size, dropout):
-    """base model for 128^3 volume (2^7)"""
+    """Base model for 128^3 volume (2^7)"""
     bottleneck_size = 256
 
     if (image_size == 128) or (image_size == 64):

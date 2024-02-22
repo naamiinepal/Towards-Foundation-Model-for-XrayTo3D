@@ -1,11 +1,13 @@
-"""generate evaluation script"""
-import sys
+"""Generate evaluation script."""
 import argparse
+import sys
+
 import wandb
+
 from XrayTo3DShape import (
     filter_wandb_run,
-    get_run_from_model_name,
     get_anatomy_from_path,
+    get_run_from_model_name,
 )
 
 expt_dict = {
@@ -40,10 +42,12 @@ anatomy = get_anatomy_from_path(args.testpaths)
 wandb.login()
 runs = filter_wandb_run(anatomy=anatomy, tags=args.tags, verbose=False)
 
-print(f'found {len(runs)} for anatomy {get_anatomy_from_path(args.testpaths)} with tags {args.tags}')
+print(
+    f"found {len(runs)} for anatomy {get_anatomy_from_path(args.testpaths)} with tags {args.tags}"
+)
 for run in runs:
-    print(run.id,run.config['MODEL_NAME'])
-    
+    print(run.id, run.config["MODEL_NAME"])
+
 if len(runs) == 0:
     print(f"found {len(runs)} wandb runs for anatomy {args.anatomy}. exiting ...")
     sys.exit()

@@ -8,5 +8,5 @@ tar -xzvf v5.3.0.tar.gz
 cd ITK-5.3.0 || exit
 mkdir build
 cd build || exit
-cmake .. -DModule_TwoProjectionRegistration=ON -DBUILD_TESTING=ON -DBUILD_EXAMPLES=ON 
+cmake .. -DModule_TwoProjectionRegistration=ON -DBUILD_TESTING=ON -DBUILD_EXAMPLES=ON
 make -j 20

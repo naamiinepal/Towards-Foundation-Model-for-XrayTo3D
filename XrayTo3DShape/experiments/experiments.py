@@ -1,12 +1,11 @@
-"""Architecture specific training regime
+"""Architecture specific training regime.
 
-VolumeAsInput
-https://arxiv.org/abs/2004.00871
-End-to-end convolutional neural network for 3D reconstruction of knee bones from bi-planar X-ray images
+VolumeAsInput https://arxiv.org/abs/2004.00871 End-to-end convolutional neural network for 3D
+reconstruction of knee bones from bi-planar X-ray images
 
 ParallelHead
 https://arxiv.org/pdf/2007.06612
-Inferring the 3D standing spine posture from 2D radiographs
+ Inferring the 3D standing spine posture from 2D radiographs
 
 TLPredictor
 https://arxiv.org/abs/1603.08637
@@ -15,19 +14,18 @@ Learning a Predictable and Generative Vector Representation for Objects
 from typing import Any, Optional, Tuple
 
 import torch
+import wandb
 from monai.metrics.meandice import compute_dice
 
-import wandb
-
 from ..architectures import CustomAutoEncoder
+from ..losses import l1_loss
 from ..transforms import post_transform
 from ..utils import reproject, to_numpy
 from .base_experiment import BaseExperiment
-from ..losses import l1_loss
 
 
 class VolumeAsInputExperiment(BaseExperiment):
-    """Merge AP and LAT volume as 2-channel 3D volume"""
+    """Merge AP and LAT volume as 2-channel 3D volume."""
 
     def __init__(
         self, model, optimizer=None, loss_function=None, batch_size=None, **kwargs: Any
@@ -42,7 +40,7 @@ class VolumeAsInputExperiment(BaseExperiment):
 
 
 class ParallelHeadsExperiment(BaseExperiment):
-    """keep AP and LAT 2D images separate"""
+    """Keep AP and LAT 2D images separate."""
 
     def __init__(
         self, model, optimizer=None, loss_function=None, batch_size=None, **kwargs: Any
@@ -57,7 +55,7 @@ class ParallelHeadsExperiment(BaseExperiment):
 
 
 class AutoencoderExperiment(BaseExperiment):
-    """train a autoencoder with 1D bottlneck"""
+    """Train a autoencoder with 1D bottleneck."""
 
     def __init__(
         self,
@@ -74,7 +72,7 @@ class AutoencoderExperiment(BaseExperiment):
 
     def get_input_output_from_batch(self, batch) -> Tuple[Any, torch.Tensor]:
         _, _, seg = batch
-        noisy_seg, clean_seg = seg["gaus"], seg["orig"]
+        noisy_seg, clean_seg = seg["gauss"], seg["orig"]
         return [
             noisy_seg
         ], clean_seg  # the input has to be put inside a list as a hack to keep the interface same for all type of models self.model(*input)
@@ -125,13 +123,7 @@ class AutoencoderExperiment(BaseExperiment):
 
     def log_3d_images(self, predictions, label):
         projections = [reproject(volume.squeeze(), 0) for volume in predictions]
-        wandb.log(
-            {
-                f"{label}": [
-                    wandb.Image(to_numpy(image.float())) for image in projections
-                ]
-            }
-        )
+        wandb.log({f"{label}": [wandb.Image(to_numpy(image.float())) for image in projections]})
 
 
 class TLPredictorExperiment(BaseExperiment):

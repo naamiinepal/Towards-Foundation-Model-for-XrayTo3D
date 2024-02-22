@@ -1,13 +1,13 @@
-"""
-Contains Image size of datasets from the preprocessing pipeline.
+"""Contains Image size of datasets from the preprocessing pipeline.
+
 returns model architecture-specific data transformation pipeline
 """
 from typing import Dict
 
 from monai.networks.nets.attentionunet import AttentionUnet
+from monai.networks.nets.swin_unetr import SwinUNETR
 from monai.networks.nets.unet import UNet
 from monai.networks.nets.unetr import UNETR
-from monai.networks.nets.swin_unetr import SwinUNETR
 from monai.transforms.compose import Compose
 
 from .architectures import (
@@ -66,11 +66,9 @@ model_experiment_dict = {
 }
 
 
-def get_transform_from_model_name(
-    model_name, image_size, resolution
-) -> Dict[str, Compose]:
-    """return data transformation pipeline for given
-    model architecture and suggested target size and resolution
+def get_transform_from_model_name(model_name, image_size, resolution) -> Dict[str, Compose]:
+    """Return data transformation pipeline for given model architecture and suggested target size
+    and resolution.
 
     Args:
         model_name (str): model architecture name
@@ -85,16 +83,12 @@ def get_transform_from_model_name(
     """
     experiment_name = model_experiment_dict[model_name]
     if experiment_name == ParallelHeadsExperiment.__name__:
-        callable_transform = get_nonkasten_transforms(
-            size=image_size, resolution=resolution
-        )
+        callable_transform = get_nonkasten_transforms(size=image_size, resolution=resolution)
     elif experiment_name in (
         VolumeAsInputExperiment.__name__,
         TLPredictorExperiment.__name__,
     ):
-        callable_transform = get_kasten_transforms(
-            size=image_size, resolution=resolution
-        )
+        callable_transform = get_kasten_transforms(size=image_size, resolution=resolution)
     elif experiment_name == AutoencoderExperiment.__name__:
         callable_transform = get_denoising_autoencoder_transforms(
             size=image_size, resolution=resolution

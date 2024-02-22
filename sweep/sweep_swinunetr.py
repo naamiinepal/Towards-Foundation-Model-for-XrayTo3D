@@ -16,8 +16,8 @@ training_config = {
 }
 
 sweep_parameters = {
-    "feature_size": {"values": ['small', 'default', 'large']},
-    "num_heads": {"values": ['small', 'progressive']},
+    "feature_size": {"values": ["small", "default", "large"]},
+    "num_heads": {"values": ["small", "progressive"]},
 }
 
 sweep_config = {

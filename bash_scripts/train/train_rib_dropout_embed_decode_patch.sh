@@ -16,7 +16,7 @@ unique_tag=$(python -c "import friendlywords as fw; print(fw.generate(1))")
 
 
 
-# run python script and tag this wandb run 
+# run python script and tag this wandb run
 
 CUDA_VISIBLE_DEVICES=1 python train.py  $trainpaths $testpaths --gpu $gpu --tags model-compare patch dropout $unique_tag --size $img_size --batch_size $batch_size --accelerator gpu --res $res --model_name CustomAutoEncoder --epochs -1 --loss $loss  --lr $lr  --dropout --steps $steps
 

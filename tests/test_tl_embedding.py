@@ -1,12 +1,13 @@
-import torch
-from XrayTo3DShape import get_kasten_transforms, BaseDataset, Encoder1DEmbed
-from torch.utils.data import DataLoader
 import pandas as pd
+import torch
 import wandb
+from monai.losses.dice import DiceCELoss
+from monai.metrics.meandice import DiceMetric
 from monai.transforms.compose import Compose
 from monai.transforms.post.array import AsDiscrete
-from monai.metrics.meandice import DiceMetric
-from monai.losses.dice import DiceCELoss
+from torch.utils.data import DataLoader
+
+from XrayTo3DShape import BaseDataset, Encoder1DEmbed, get_kasten_transforms
 
 denoising_ae_path = "tests/denoising_ae_epoch100.pth"
 ae_model = torch.load(denoising_ae_path)

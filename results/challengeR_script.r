@@ -6,14 +6,14 @@ ranking <- challenge%>%testThenRank(alpha = 0.05, # significance level
                                     p.adjust.method = "none", # method for adjustment for
                                                               # multiple testing, see ?p.adjust
                                     na.treat = 0, # either "na.rm" to remove missing data,
-                                                  # set missings to numeric value (e.g. 0)
+                                                  # set missing to numeric value (e.g. 0)
                                                   # or specify a function, e.g. function(x) min(x)
                                     ties.method = "min" # a character string specifying
                                                         # how ties are treated, see ?base::rank
                                    )
 set.seed(1)
 ranking_bootstrapped <- ranking%>%bootstrap(nboot=1000)
-meanRanks <- ranking%>%consensus(method = "euclidean") 
+meanRanks <- ranking%>%consensus(method = "euclidean")
 ranking_bootstrapped %>% report(consensus=meanRanks, title = 'Biplanar Xrayto3D  Benchmark',file='xray3D_benchmark',format='HTML')
 
 # additional code to save svg
@@ -37,7 +37,7 @@ for (subt in names(ranking_bootstrapped$bootsrappedRanks)){
                              size.ranks=.25*theme_get()$text$size,
                              size=8,
                              shape=4,
-                             showLabelForSingleTask=showLabelForSingleTask) + 
+                             showLabelForSingleTask=showLabelForSingleTask) +
     # scale_color_manual(values=cols) + #comment due to error
     guides(color = 'none')
 

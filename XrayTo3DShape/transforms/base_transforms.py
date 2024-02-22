@@ -1,25 +1,25 @@
-"""specialized data transformation specific to model architecture"""
+"""Specialized data transformation specific to model architecture."""
 from typing import Sequence
 
 import einops
 import numpy as np
 import torch
 from monai.data.image_reader import PILReader
-
-from monai.transforms.spatial.dictionary import ResizeD, SpacingD, OrientationD
-from monai.transforms.intensity.dictionary import ThresholdIntensityD, ScaleIntensityD
-from monai.transforms.io.dictionary import LoadImageD
-from monai.transforms.utility.dictionary import EnsureChannelFirstD, LambdaD
-from monai.transforms.utility.array import Lambda
-from monai.transforms.croppad.dictionary import ResizeWithPadOrCropD
 from monai.transforms.compose import Compose
+from monai.transforms.croppad.dictionary import ResizeWithPadOrCropD
+from monai.transforms.intensity.dictionary import ScaleIntensityD, ThresholdIntensityD
+from monai.transforms.io.dictionary import LoadImageD
+from monai.transforms.spatial.dictionary import OrientationD, ResizeD, SpacingD
+from monai.transforms.utility.array import Lambda
+from monai.transforms.utility.dictionary import EnsureChannelFirstD, LambdaD
 from skimage.util import random_noise
 
 
 def get_resize_transform(
     keys, original_size: Sequence[int], reduction_rate: float, mode="nearest"
 ):
-    """thin Wrapper around ```monai.transforms.ResizeD``` to resize an image by given reduction rate
+    """Thin Wrapper around ```monai.transforms.ResizeD``` to resize an image by given reduction
+    rate.
 
     Args:
         keys (_type_): Same as monai keys passed to callable transform
@@ -35,7 +35,7 @@ def get_resize_transform(
 
 
 def get_denoising_autoencoder_transforms(size=64, resolution=1.5):
-    """return both noisy and clean version of the segmentation label
+    """Return both noisy and clean version of the segmentation label.
 
     Args:
         size (int, optional): image size. Defaults to 64.
@@ -47,7 +47,7 @@ def get_denoising_autoencoder_transforms(size=64, resolution=1.5):
     noise_lambda = Lambda(
         lambda d: {
             "orig": d["seg"],
-            "gaus": torch.tensor(
+            "gauss": torch.tensor(
                 random_noise(d["seg"], mode="gaussian", mean=0, var=0.01, clip=False),
                 dtype=torch.float32,
             ),
@@ -88,7 +88,7 @@ def get_denoising_autoencoder_transforms(size=64, resolution=1.5):
 
 
 def get_nonkasten_transforms(size=64, resolution=1.5):
-    """transform AP and LAT images as 2D images"""
+    """Transform AP and LAT images as 2D images."""
     ap_transform = Compose(
         [
             LoadImageD(
@@ -160,7 +160,7 @@ def get_nonkasten_transforms(size=64, resolution=1.5):
 
 
 def get_kasten_transforms(size=64, resolution=1.5):
-    """transform AP/LAT images into 3D volumes by repeating along orthogonal directions"""
+    """Transform AP/LAT images into 3D volumes by repeating along orthogonal directions."""
     ap_transform = Compose(
         [
             LoadImageD(
@@ -179,9 +179,7 @@ def get_kasten_transforms(size=64, resolution=1.5):
                 mode="bilinear",
                 align_corners=True,
             ),
-            LambdaD(
-                keys={"ap"}, func=lambda t: einops.repeat(t, "1 m n -> 1 k m n", k=size)
-            ),
+            LambdaD(keys={"ap"}, func=lambda t: einops.repeat(t, "1 m n -> 1 k m n", k=size)),
             ScaleIntensityD(keys={"ap"}),
             # DataStatsD(keys='ap')
         ]
@@ -234,4 +232,3 @@ def get_kasten_transforms(size=64, resolution=1.5):
         ]
     )
     return {"ap": ap_transform, "lat": lat_transform, "seg": seg_transform}
-

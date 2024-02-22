@@ -1,7 +1,7 @@
-"""
-adapted from monai.networks.nets.varautoencoder
-The original Autoencoder in the monai.networks.nets.autoencoder does not have a
-1D bottlneck latent vector layer i.e. it is fully convolutional.
+"""Adapted from monai.networks.nets.varautoencoder The original Autoencoder in the
+monai.networks.nets.autoencoder does not have a 1D bottleneck latent vector layer i.e. it is fully
+convolutional.
+
 In our application we need a low-dimensional  1D embedding of the Biplanar x-rays,
 hence the need for full connected layer in between the encoder and the decoder
 TODO: remove.
@@ -22,8 +22,8 @@ from torch import nn
 
 @deprecated(msg_suffix="use architectures.autoencoder_v2 instead.")
 class Encoder1DEmbed(nn.Module):
-    """Simple encoder consisting of multiple layers of Convolutions
-    and a fully connected layer in the end to obtain a 1D embedding vector
+    """Simple encoder consisting of multiple layers of Convolutions and a fully connected layer in
+    the end to obtain a 1D embedding vector.
 
     Args:
         spatial_dims: number of spatial dimensions
@@ -93,9 +93,7 @@ class Encoder1DEmbed(nn.Module):
         padding = same_padding(self.kernel_size)
         self.final_size = np.asarray(self.in_shape, dtype=int)
         for s in strides:
-            self.final_size = calculate_out_shape(
-                self.final_size, self.kernel_size, s, padding
-            )
+            self.final_size = calculate_out_shape(self.final_size, self.kernel_size, s, padding)
 
         linear_size = int(np.product(self.final_size)) * self.encoded_channels
         self.latent_encode_layer = nn.Linear(linear_size, self.latent_size)
@@ -115,9 +113,7 @@ class Encoder1DEmbed(nn.Module):
     def _get_encode_layer(
         self, in_channels: int, out_channels: int, strides: int, is_last: bool
     ) -> nn.Module:
-        """
-        Returns a single layer of the encoder part of the network.
-        """
+        """Returns a single layer of the encoder part of the network."""
         mod: nn.Module
         if self.num_res_units > 0:
             mod = ResidualUnit(
@@ -153,6 +149,7 @@ class Encoder1DEmbed(nn.Module):
         x = x.view(x.shape[0], -1)
         x = self.latent_encode_layer(x)
         return x
+
 
 @deprecated(msg_suffix="use architectures.autoencoder_v2 instead.")
 class AutoEncoder1DEmbed(AutoEncoder):
@@ -203,9 +200,7 @@ class AutoEncoder1DEmbed(AutoEncoder):
         padding = same_padding(self.kernel_size)
 
         for s in strides:
-            self.final_size = calculate_out_shape(
-                self.final_size, self.kernel_size, s, padding
-            )
+            self.final_size = calculate_out_shape(self.final_size, self.kernel_size, s, padding)
 
         linear_size = int(np.product(self.final_size)) * self.encoded_channels
         self.latent_encode_layer = nn.Sequential(

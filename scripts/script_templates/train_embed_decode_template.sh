@@ -1,7 +1,7 @@
 #generate unique tag for this wandb run
 unique_tag=$(python -c "import friendlywords as fw; print(fw.generate(1))")
 
-# run python script and tag this wandb run 
+# run python script and tag this wandb run
 python train.py  $trainpaths $testpaths --gpu $gpu --tags $tag $unique_tag --size $img_size --batch_size $batch_size --accelerator gpu --res $res --model_name CustomAutoEncoder --epochs -1 --loss $loss  --lr $lr  --dropout --steps $steps
 
 # find the run-id with this unique wandb tag

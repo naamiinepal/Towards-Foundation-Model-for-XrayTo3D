@@ -9,4 +9,3 @@ python evaluate.py  --testpaths configs/full/TotalSegmentor-ribs-DRR-full_test_p
 python evaluate.py  --testpaths configs/full/TotalSegmentor-ribs-DRR-full_test_patch.csv --gpu 0 --image_size 128 --batch_size 16 --accelerator gpu --res 1.25 --model_name UNETR --ckpt_path runs/2d-3d-benchmark/kl7xzdt8/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/kl7xzdt8/checkpoints/../evaluation
 
 python evaluate.py  --testpaths configs/full/TotalSegmentor-ribs-DRR-full_test_patch.csv --gpu 0 --image_size 128 --batch_size 16 --accelerator gpu --res 1.25 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/vs1e9hxu/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/vs1e9hxu/checkpoints/../evaluation
-

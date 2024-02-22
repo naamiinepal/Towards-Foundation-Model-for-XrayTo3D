@@ -16,10 +16,10 @@ from torch import nn
 
 
 class HausdorffDTLoss(nn.Module):
-    """Binary Hausdorff loss based on distance transform"""
+    """Binary Hausdorff loss based on distance transform."""
 
     def __init__(self, device, alpha=2.0, **kwargs):
-        super(HausdorffDTLoss, self).__init__()
+        super().__init__()
         self.alpha = alpha
         self.device = device
 
@@ -40,18 +40,14 @@ class HausdorffDTLoss(nn.Module):
 
         return field
 
-    def forward(
-        self, pred: torch.Tensor, target: torch.Tensor, debug=False
-    ) -> torch.Tensor:
+    def forward(self, pred: torch.Tensor, target: torch.Tensor, debug=False) -> torch.Tensor:
         """
         Uses one binary channel: 1 - fg, 0 - bg
         pred: (b, 1, x, y, z) or (b, 1, x, y)
         target: (b, 1, x, y, z) or (b, 1, x, y)
         """
         assert pred.dim() == 4 or pred.dim() == 5, "Only 2D and 3D supported"
-        assert (
-            pred.dim() == target.dim()
-        ), "Prediction and target need to be of same dimension"
+        assert pred.dim() == target.dim(), "Prediction and target need to be of same dimension"
 
         # pred = torch.sigmoid(pred)
 
@@ -89,10 +85,10 @@ class HausdorffDTLoss(nn.Module):
 
 
 class HausdorffERLoss(nn.Module):
-    """Binary Hausdorff loss based on morphological erosion"""
+    """Binary Hausdorff loss based on morphological erosion."""
 
     def __init__(self, device, alpha=2.0, erosions=10, **kwargs):
-        super(HausdorffERLoss, self).__init__()
+        super().__init__()
         self.alpha = alpha
         self.erosions = erosions
         self.device = device
@@ -106,9 +102,7 @@ class HausdorffERLoss(nn.Module):
         self.kernel3D = np.array([bound, cross, bound]) * (1 / 7)
 
     @torch.no_grad()
-    def perform_erosion(
-        self, pred: np.ndarray, target: np.ndarray, debug
-    ) -> np.ndarray:
+    def perform_erosion(self, pred: np.ndarray, target: np.ndarray, debug) -> np.ndarray:
         bound = (pred - target) ** 2
 
         if bound.ndim == 5:
@@ -149,18 +143,14 @@ class HausdorffERLoss(nn.Module):
         else:
             return eroded
 
-    def forward(
-        self, pred: torch.Tensor, target: torch.Tensor, debug=False
-    ) -> torch.Tensor:
+    def forward(self, pred: torch.Tensor, target: torch.Tensor, debug=False) -> torch.Tensor:
         """
         Uses one binary channel: 1 - fg, 0 - bg
         pred: (b, 1, x, y, z) or (b, 1, x, y)
         target: (b, 1, x, y, z) or (b, 1, x, y)
         """
         assert pred.dim() == 4 or pred.dim() == 5, "Only 2D and 3D supported"
-        assert (
-            pred.dim() == target.dim()
-        ), "Prediction and target need to be of same dimension"
+        assert pred.dim() == target.dim(), "Prediction and target need to be of same dimension"
 
         # pred = torch.sigmoid(pred)
 

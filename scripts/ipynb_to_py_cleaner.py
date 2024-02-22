@@ -13,14 +13,12 @@ def cleaner_main(filename):
 
     # convert notebook to python file
     print("Convert " + file_notebook + " to " + file_python)
-    subprocess.check_output(
-        "jupyter nbconvert --to script " + str(file_notebook), shell=True
-    )
+    subprocess.check_output("jupyter nbconvert --to script " + str(file_notebook), shell=True)
 
     print("Clean " + file_python)
 
     # open file
-    with open(file_python, "r") as f_in:
+    with open(file_python) as f_in:
         lines_in = f_in.readlines()
 
     # remove cell indices
@@ -30,9 +28,7 @@ def cleaner_main(filename):
     lines_in = [line for i, line in enumerate(lines_in) if line[0] != "#"]
 
     # remove "in_ipynb()" function
-    idx_start_fnc = next(
-        (i for i, x in enumerate(lines_in) if "def in_ipynb" in x), None
-    )
+    idx_start_fnc = next((i for i, x in enumerate(lines_in) if "def in_ipynb" in x), None)
     if idx_start_fnc != None:
         idx_end_fnc = idx_start_fnc + next(
             (
@@ -143,7 +139,7 @@ def cleaner_main(filename):
             run = False
 
     # save clean file
-    lines_out = str()
+    lines_out = ""
     for line in lines_in:
         lines_out += line
     with open(file_python, "w") as f_out:

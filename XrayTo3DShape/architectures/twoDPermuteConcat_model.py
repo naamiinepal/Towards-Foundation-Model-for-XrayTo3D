@@ -6,14 +6,13 @@ from torch import nn
 
 
 class TwoDPermuteConcat(nn.Module):
-    """
-    Transvert Architecture
-    Bayat, Amirhossein, et al. "Inferring the 3D standing spine posture from 2D radiographs.", 2020.
+    """Transvert Architecture Bayat, Amirhossein, et al. "Inferring the 3D standing spine posture
+    from 2D radiographs.", 2020.
 
-        Attributes:
-        pa_encoder (nn.Module): encodes AP view x-rays
-        lat_encoder (nn.Module): encodes LAT view x-rays
-        decoder (nn.Module): takes encoded and fused AP and LAT view and generates a 3D volume
+    Attributes:
+    pa_encoder (nn.Module): encodes AP view x-rays
+    lat_encoder (nn.Module): encodes LAT view x-rays
+    decoder (nn.Module): takes encoded and fused AP and LAT view and generates a 3D volume
     """
 
     def __init__(self, config: Dict) -> None:

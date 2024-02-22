@@ -2,14 +2,14 @@ import argparse
 
 import pandas as pd
 import torch
+import wandb
 from monai.losses.dice import DiceCELoss
 from monai.metrics.meandice import DiceMetric
 from monai.networks.nets.attentionunet import AttentionUnet
 from monai.transforms.compose import Compose
-from monai.transforms.post.array import AsDiscrete, Activations
+from monai.transforms.post.array import Activations, AsDiscrete
 from torch.utils.data import DataLoader
 
-import wandb
 from XrayTo3DShape import BaseDataset, get_kasten_transforms
 
 lr = 1e-2
@@ -19,7 +19,7 @@ TEST_ZERO_INPUT = False
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("filepaths", default='configs/test/LIDC-DRR-test.csv')
+parser.add_argument("filepaths", default="configs/test/LIDC-DRR-test.csv")
 
 args = parser.parse_args()
 

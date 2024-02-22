@@ -1,19 +1,19 @@
 import pandas as pd
 import torch
+import wandb
 from monai.losses.dice import DiceLoss
 from monai.metrics.meandice import DiceMetric
 from monai.transforms.compose import Compose
 from monai.transforms.post.array import Activations, AsDiscrete
 from torch.utils.data import DataLoader
 
-import wandb
 from XrayTo3DShape import (
-    get_nonkasten_transforms,
     BaseDataset,
     MultiScale2DPermuteConcat,
     NGCCLoss,
-    get_projectionslices_from_3d,
     get_model_config,
+    get_nonkasten_transforms,
+    get_projectionslices_from_3d,
     printarr,
 )
 
@@ -29,9 +29,7 @@ paths = pd.read_csv(paths_location, index_col=0).to_numpy()
 paths = [{"ap": ap, "lat": lat, "seg": seg} for ap, lat, seg in paths]
 size = 128
 
-ds = BaseDataset(
-    data=paths, transforms=get_nonkasten_transforms(size=size, resolution=1.5)
-)
+ds = BaseDataset(data=paths, transforms=get_nonkasten_transforms(size=size, resolution=1.5))
 data_loader = DataLoader(ds, batch_size=BATCH_SIZE)
 ap, lat, seg = next(iter(data_loader))
 ap_tensor, lat_tensor, seg_tensor = ap["ap"], lat["lat"], seg["seg"]

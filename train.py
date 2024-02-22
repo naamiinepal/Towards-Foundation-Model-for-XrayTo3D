@@ -1,7 +1,5 @@
-"""
-script to train various architectures on given dataset
-(defined by training and validation filepaths).
-"""
+"""Script to train various architectures on given dataset (defined by training and validation
+filepaths)."""
 import argparse
 import os
 import sys
@@ -11,6 +9,7 @@ import monai.data.meta_obj as monai_meta_obj
 import numpy as np
 import pytorch_lightning as pl
 import torch
+import wandb
 from monai.utils.misc import set_determinism
 from pytorch_lightning import seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -18,7 +17,6 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 from torch.optim import Adam
 from torch.utils.data.dataloader import DataLoader
 
-import wandb
 import XrayTo3DShape
 from XrayTo3DShape import (
     AutoencoderExperiment,
@@ -41,7 +39,7 @@ torch.set_printoptions(precision=2, sci_mode=False)
 
 
 def parse_training_arguments():
-    """reads various options from commandline
+    """Reads various options from commandline.
 
     Returns:
         dict: (key,value) pairs of option and corresponding value
@@ -75,7 +73,7 @@ def parse_training_arguments():
 
     parser.add_argument("--dropout", default=False, action="store_true")
     parser.add_argument("--load_autoencoder_from", default="", type=str)
-    parser.add_argument('--load_model_from', default=None,type=str)
+    parser.add_argument("--load_model_from", default=None, type=str)
     parser.add_argument("--top_k_checkpoints", default=3, type=int)
 
     parser.add_argument("--precision", default=32, type=int)
@@ -88,8 +86,8 @@ def parse_training_arguments():
 
 
 def update_args(args):
-    """update sensible values for remaining arguments using
-    the argument values provided. Perform sanity check of arguments.
+    """Update sensible values for remaining arguments using the argument values provided. Perform
+    sanity check of arguments.
 
     Args:
         args (dict): (option,value) pair
@@ -99,7 +97,7 @@ def update_args(args):
     # add dropout to tag if exists
     # if args.dropout:
     #     args.tags.append('dropout')
-    if 'dropout' in args.tags:
+    if "dropout" in args.tags:
         args.dropout = True
     # # assert the resolution and size agree for each anatomy
     # orig_size, orig_res = anatomy_resolution_dict[args.anatomy]
@@ -155,9 +153,7 @@ if __name__ == "__main__":
         drop_last=False,
     )
 
-    model = get_model(
-        model_name=args.model_name, image_size=IMG_SIZE, dropout=args.dropout
-    )
+    model = get_model(model_name=args.model_name, image_size=IMG_SIZE, dropout=args.dropout)
     loss_function = get_loss(
         loss_name=LOSS_NAME,
         anatomy=ANATOMY,
@@ -179,9 +175,7 @@ if __name__ == "__main__":
         if Path(args.load_autoencoder_from).exists():
             checkpoint = torch.load(args.load_autoencoder_from)
         else:
-            raise ValueError(
-                f"autoencoder checkpoint {args.load_autoencoder_from} does not exist"
-            )
+            raise ValueError(f"autoencoder checkpoint {args.load_autoencoder_from} does not exist")
         for key in list(checkpoint["state_dict"].keys()):
             # model.layer1.conv1 -> layer1.conv1
             modified_key = key.replace("model.", "")
@@ -195,11 +189,11 @@ if __name__ == "__main__":
     if args.load_model_from:
         if Path(args.load_model_from).exists():
             checkpoint = torch.load(args.load_model_from)
-            experiment.load_state_dict(checkpoint['state_dict'])
-            print(f'loaded model checkpoint from {args.load_model_from}')
+            experiment.load_state_dict(checkpoint["state_dict"])
+            print(f"loaded model checkpoint from {args.load_model_from}")
         else:
-            raise ValueError(f'could not load model checkpoint from {args.load_model_from}')
-        
+            raise ValueError(f"could not load model checkpoint from {args.load_model_from}")
+
     # run a sanity check
     batch = next(iter(train_loader))
     if args.experiment_name != AutoencoderExperiment.__name__:
@@ -240,8 +234,8 @@ if __name__ == "__main__":
         "MODEL_NAME": model_name,
         "LOSS": LOSS_NAME,
         "EXPERIMENT_NAME": experiment_name,
-        "TRAIN_CSV":args.trainpaths,
-        "VAL_CSV":args.valpaths
+        "TRAIN_CSV": args.trainpaths,
+        "VAL_CSV": args.valpaths,
     }
     HYPERPARAMS.update(MODEL_CONFIG)
     wandb_logger.log_hyperparams(HYPERPARAMS)

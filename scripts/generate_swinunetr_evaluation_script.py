@@ -1,6 +1,8 @@
-"""generate training script for 2 stage embed and decode"""
+"""Generate training script for 2 stage embed and decode."""
 import argparse
+
 from XrayTo3DShape import get_anatomy_from_path
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--testpaths")
 parser.add_argument("--gpu", default=0, type=int)
@@ -22,8 +24,7 @@ var_definition += f"gpu={args.gpu}\n"
 var_definition += f"batch_size={args.batch_size}\n"
 
 
-with open("scripts/evaluate_swinunetr_template.sh", "r") as f:
+with open("scripts/evaluate_swinunetr_template.sh") as f:
     template_script = f.readlines()
     full_script = str(var_definition) + "\n".join(template_script)
     print(full_script)
-

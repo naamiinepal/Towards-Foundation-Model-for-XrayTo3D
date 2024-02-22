@@ -10,14 +10,10 @@ from torch.utils.data import Dataset
 
 
 class BaseDataset(Dataset):
-    """
-    A generic dataset with a length property and required callable data transform
-    for AP, LAT and segmentation  when fetching a data sample.
-            [{
-             'ap': 'image1.nii.gz', 'lat':'image3.nii.gz','seg': 'label1.nii.gz'
-             }
-            ]
+    """A generic dataset with a length property and required callable data transform for AP, LAT
+    and segmentation  when fetching a data sample.
 
+    [{  'ap': 'image1.nii.gz', 'lat':'image3.nii.gz','seg': 'label1.nii.gz'  } ]
     """
 
     def __init__(self, data: Sequence, transforms: Dict[str, Callable]) -> None:
@@ -29,9 +25,7 @@ class BaseDataset(Dataset):
         return len(self.data)
 
     def _transform(self, index: int):
-        """
-        Fetch single data item from `self.data`
-        """
+        """Fetch single data item from `self.data`"""
         data_i = self.data[index]
         ap_transform, lat_transform, seg_transform = (
             self.transforms["ap"],
@@ -50,9 +44,8 @@ class BaseDataset(Dataset):
 
 class AtlasDeformationDataset(Dataset):
     """TODO: work in progress"""
-    def __init__(
-        self, data: Sequence, atlas_path, transforms: Dict[str, Callable]
-    ) -> None:
+
+    def __init__(self, data: Sequence, atlas_path, transforms: Dict[str, Callable]) -> None:
         super().__init__()
         self.atlas_path = atlas_path
         self.data = data
@@ -80,6 +73,7 @@ class AtlasDeformationDataset(Dataset):
 
 class DeformationDataset(Dataset):
     """TODO: work in progress"""
+
     def __init__(self, data: Sequence, transforms: Dict[str, Callable]) -> None:
         super().__init__()
         self.data = data
@@ -89,7 +83,7 @@ class DeformationDataset(Dataset):
         return len(self.data)
 
     def transform(self, index: int):
-        """apply transformation to fixed and moving images"""
+        """Apply transformation to fixed and moving images."""
         data_i = self.data[index]
         fixed_transform, moving_transform = (
             self.transforms["fixed"],
@@ -105,7 +99,7 @@ class DeformationDataset(Dataset):
 
 
 def get_dataset(filepaths: str, transforms: Dict) -> Dataset:
-    """read filepaths csv and return Dataset"""
+    """Read filepaths csv and return Dataset."""
     paths = pd.read_csv(filepaths, index_col=0).to_numpy()
     paths = [{"ap": ap, "lat": lat, "seg": seg} for ap, lat, seg in paths]
     return BaseDataset(data=paths, transforms=transforms)

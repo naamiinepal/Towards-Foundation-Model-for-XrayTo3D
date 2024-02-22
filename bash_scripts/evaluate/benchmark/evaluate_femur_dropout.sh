@@ -9,4 +9,3 @@ python evaluate.py  --testpaths configs/paths/femur/30k/TotalSegmentor-femur-lef
 python evaluate.py  --testpaths configs/paths/femur/30k/TotalSegmentor-femur-left-DRR-30k_test.csv --gpu 0 --image_size 128 --batch_size 8 --accelerator gpu --res 1.0 --model_name UNet --ckpt_path runs/2d-3d-benchmark/nuhm8qx9/checkpoints --gpu 0 --output_path runs/2d-3d-benchmark/nuhm8qx9/checkpoints/../evaluation
 
 python evaluate.py  --testpaths configs/paths/femur/30k/TotalSegmentor-femur-left-DRR-30k_test.csv --gpu 0 --image_size 128 --batch_size 8 --accelerator gpu --res 1.0 --model_name UNETR --ckpt_path runs/2d-3d-benchmark/27uay0sp/checkpoints --gpu 0 --output_path runs/2d-3d-benchmark/27uay0sp/checkpoints/../evaluation
-

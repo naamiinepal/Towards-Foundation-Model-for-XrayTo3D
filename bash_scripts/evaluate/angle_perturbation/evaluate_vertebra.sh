@@ -53,4 +53,3 @@ python evaluate.py  --testpaths configs/angle_perturbation/Verse2019-DRR-full_te
 python evaluate.py  --testpaths configs/angle_perturbation/Verse2019-DRR-full_test_5.csv --gpu 0 --image_size 64 --batch_size 1 --accelerator gpu --res 1.5 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/u66dbc2b/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/u66dbc2b/checkpoints/../angle_perturbation/5
 
 python evaluate.py  --testpaths configs/angle_perturbation/Verse2019-DRR-full_test_10.csv --gpu 0 --image_size 64 --batch_size 1 --accelerator gpu --res 1.5 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/u66dbc2b/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/u66dbc2b/checkpoints/../angle_perturbation/10
-

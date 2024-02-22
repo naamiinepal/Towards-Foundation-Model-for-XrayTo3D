@@ -1,19 +1,18 @@
 from pathlib import Path
 from typing import Sequence
-from xrayto3d_preprocess import load_centroids
+
 import numpy as np
+from xrayto3d_preprocess import load_centroids
 
 
 def generate_augment_path(
     sub_dir: str, name: str, subject_id, augment_angle, output_path_template, config
 ):
-    """xray_ap:"{id_hip-ap.png} -> img001_hip-ap.png"""
+    """xray_ap:"{id_hip-ap.png} -> img001_hip-ap.png."""
     output_fileformat = config["filename_convention"]["output"]
     out_dirs = config["out_directories"]
     filename = output_fileformat[name].format(id=subject_id, angle=augment_angle)
-    out_path = output_path_template.format(
-        output_type=out_dirs[sub_dir], output_name=filename
-    )
+    out_path = output_path_template.format(output_type=out_dirs[sub_dir], output_name=filename)
     Path(out_path).parent.mkdir(exist_ok=True, parents=True)
     return out_path
 
@@ -26,11 +25,9 @@ def get_individual_fullpaths(
     seg_pattern="*msk.nii.gz",
     patch_based=False,
 ):
-    """return ap, lat, seg filepaths"""
+    """Return ap, lat, seg filepaths."""
     derivatives_path = (
-        Path(config.subjects.subject_basepath).resolve()
-        / f"{subject_dir}"
-        / "derivatives"
+        Path(config.subjects.subject_basepath).resolve() / f"{subject_dir}" / "derivatives"
     )
     if patch_based:
         xray_basepath = derivatives_path / "xray_from_ct_patch"
@@ -49,7 +46,7 @@ def get_individual_fullpaths_aug(
     subject_dir,
     config,
 ):
-    """return ap, lat, seg filepaths"""
+    """Return ap, lat, seg filepaths."""
     subject_id = subject_dir
     subject_basepath = config["subjects"]["subject_basepath"]
     input_fileformat = config["filename_convention"]["input"]
@@ -101,7 +98,7 @@ def get_individual_fullpaths_aug(
 def get_fullpaths(
     subject_list: Sequence, config, ap_pattern, lat_pattern, seg_pattern, aug_based=True
 ):
-    """return ap, lat, seg paths as dict"""
+    """Return ap, lat, seg paths as dict."""
     print(ap_pattern, lat_pattern, seg_pattern)
     ap, lat, seg = [], [], []
     if config["dataset"] == "verse":
@@ -135,9 +132,10 @@ def get_fullpaths(
 
 if __name__ == "__main__":
     import argparse
+
     import pandas as pd
-    from tqdm import tqdm
     from sklearn.model_selection import train_test_split
+    from tqdm import tqdm
     from xrayto3d_preprocess import read_config_and_load_components, read_subject_list
 
     parser = argparse.ArgumentParser()
@@ -170,9 +168,7 @@ if __name__ == "__main__":
         )
 
     dataset = (
-        "verse"
-        if str(args.config_file).split("-")[0].lower().startswith("verse")
-        else "others"
+        "verse" if str(args.config_file).split("-")[0].lower().startswith("verse") else "others"
     )
 
     config = read_config_and_load_components(args.config_file)
@@ -196,22 +192,16 @@ if __name__ == "__main__":
     train_subjects, val_subjects = train_test_split(
         train_subjects, test_size=0.15, shuffle=True, random_state=SEED
     )
-    print(
-        f"train {len(train_subjects)} val {len(val_subjects)} test {len(test_subjects)}"
-    )
+    print(f"train {len(train_subjects)} val {len(val_subjects)} test {len(test_subjects)}")
     train_paths = get_fullpaths(
         train_subjects, config, args.ap, args.lat, args.seg, aug_based=True
     )
     train_noaug_paths = get_fullpaths(
         train_subjects, config, args.ap, args.lat, args.seg, aug_based=False
     )
-    val_paths = get_fullpaths(
-        val_subjects, config, args.ap, args.lat, args.seg, aug_based=False
-    )
+    val_paths = get_fullpaths(val_subjects, config, args.ap, args.lat, args.seg, aug_based=False)
     train_val_paths = get_fullpaths(np.concatenate((train_subjects, val_subjects)), config, args.ap, args.lat, args.seg, aug_based=True)  # type: ignore
-    test_paths = get_fullpaths(
-        test_subjects, config, args.ap, args.lat, args.seg, aug_based=False
-    )
+    test_paths = get_fullpaths(test_subjects, config, args.ap, args.lat, args.seg, aug_based=False)
     # write csv
     df_train = pd.DataFrame(data=train_paths)
     df_train_noaug = pd.DataFrame(data=train_noaug_paths)
@@ -229,7 +219,5 @@ if __name__ == "__main__":
         ["train", "train_noaug", "val", "test", "train+val"],
     ):
         df.to_csv(
-            Path(config_path)
-            .with_name(Path(config_path).stem + "_" + suffix)
-            .with_suffix(".csv")
+            Path(config_path).with_name(Path(config_path).stem + "_" + suffix).with_suffix(".csv")
         )

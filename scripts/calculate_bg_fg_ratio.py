@@ -1,17 +1,16 @@
-"""
-    Calculate Positive Class Weights for Cross Entropy Loss
-    
-    when foreground and background voxels are imbalanced, the cross entropy loss
-    may not be well calibrated. 
-    Additional priors by providing predefined positive 
-    class weight (w+) = #bg_voxels / #fg_voxels
-    can be useful.
+"""Calculate Positive Class Weights for Cross Entropy Loss.
 
-    TODO: unusual variation in w+ for femur. Investigate? w+ == 0? why
-    Vertebra avg pos weight 19.21 +/- 4.08
-    femur avg pos weight 13.75 +/- 339642.12
-    rib avg pos weight 6435.80 +/- 12940.97
-    hip avg pos weight 85.21 +/- 194.05
+when foreground and background voxels are imbalanced, the cross entropy loss
+may not be well calibrated.
+Additional priors by providing predefined positive
+class weight (w+) = #bg_voxels / #fg_voxels
+can be useful.
+
+TODO: unusual variation in w+ for femur. Investigate? w+ == 0? why
+Vertebra avg pos weight 19.21 +/- 4.08
+femur avg pos weight 13.75 +/- 339642.12
+rib avg pos weight 6435.80 +/- 12940.97
+hip avg pos weight 85.21 +/- 194.05
 """
 
 from pathlib import Path
@@ -36,14 +35,14 @@ def get_bg_fg_ratio(nifti_filename, verbose=False):
     return pos_class_weight
 
 
-lidc_path = "2D-3D-Reconstruction-Datasets/lidc/subjectwise/LIDC-IDRI-LUNA-0000/derivatives/seg_roi"
+lidc_path = (
+    "2D-3D-Reconstruction-Datasets/lidc/subjectwise/LIDC-IDRI-LUNA-0000/derivatives/seg_roi"
+)
 
 pos_weight_ratios = [get_bg_fg_ratio(p) for p in Path(lidc_path).glob("*.nii.gz")]
 print(f"LIDC {np.mean(pos_weight_ratios):.2f} +/- {np.std(pos_weight_ratios):.2f}")
 
-totalseg_path = (
-    "2D-3D-Reconstruction-Datasets/totalsegmentator/Totalsegmentator_dataset"
-)
+totalseg_path = "2D-3D-Reconstruction-Datasets/totalsegmentator/Totalsegmentator_dataset"
 pos_weight_ratios = [
     get_bg_fg_ratio(p, verbose=False)
     for id, p in enumerate(Path(totalseg_path).rglob("*femur*.nii.gz"))
@@ -58,15 +57,11 @@ pos_weight_ratios = [
     for id, p in enumerate(Path(totalseg_path).rglob("*rib*.nii.gz"))
     if id < 100
 ]
-print(
-    f"Totalseg-rib {np.nanmedian(pos_weight_ratios):.2f} +/- {np.nanstd(pos_weight_ratios):.2f}"
-)
+print(f"Totalseg-rib {np.nanmedian(pos_weight_ratios):.2f} +/- {np.nanstd(pos_weight_ratios):.2f}")
 
 pos_weight_ratios = [
     get_bg_fg_ratio(p, verbose=False)
     for id, p in enumerate(Path(totalseg_path).rglob("*hip*.nii.gz"))
     if id < 100
 ]
-print(
-    f"Totalseg-hip {np.nanmedian(pos_weight_ratios):.2f} +/- {np.nanstd(pos_weight_ratios):.2f}"
-)
+print(f"Totalseg-hip {np.nanmedian(pos_weight_ratios):.2f} +/- {np.nanstd(pos_weight_ratios):.2f}")

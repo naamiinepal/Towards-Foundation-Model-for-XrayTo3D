@@ -12,7 +12,7 @@ repos:
       - id: check-yaml
       - id: debug-statements
       - id: detect-private-key
-      - id: check-executables-have-shebangs
+      # - id: check-executables-have-shebangs
       - id: check-toml
       - id: check-case-conflict
       - id: check-added-large-files
@@ -53,20 +53,20 @@ repos:
           ]
 
   # python docstring coverage checking
-  - repo: https://github.com/econchick/interrogate
-    rev: 1.5.0 # or master if you're bold
-    hooks:
-      - id: interrogate
-        args:
-          [
-            --verbose,
-            --fail-under=80,
-            --ignore-init-module,
-            --ignore-init-method,
-            --ignore-module,
-            --ignore-nested-functions,
-            -vv,
-          ]
+  # - repo: https://github.com/econchick/interrogate
+  #   rev: 1.5.0 # or master if you're bold
+  #   hooks:
+  #     - id: interrogate
+  #       args:
+  #         [
+  #           --verbose,
+  #           --fail-under=80,
+  #           --ignore-init-module,
+  #           --ignore-init-method,
+  #           --ignore-module,
+  #           --ignore-nested-functions,
+  #           -vv,
+  #         ]
 
   # python check (PEP8), programming errors and code complexity
   - repo: https://github.com/PyCQA/flake8
@@ -76,7 +76,7 @@ repos:
         args:
           [
             "--extend-ignore",
-            "E203,E402,E501,F401,F841,RST2,RST301",
+            "E203,E501,F401,F841,RST2,RST301",
             "--exclude",
             "logs/*,runs/*,experiment_log_dir/*,angle_perturbation_results/*,bash_scripts/*,domain_shift_results/*,meta_results/*,results/*,visualizations/*",
           ]

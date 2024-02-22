@@ -13,9 +13,7 @@ from torch import nn
 class DenseNetBlock(nn.Module):
     """DenseNet: x+f(x)"""
 
-    def __init__(
-        self, in_channel=8, out_channel=16, encoder_count=3, kernel_size=3
-    ) -> None:
+    def __init__(self, in_channel=8, out_channel=16, encoder_count=3, kernel_size=3) -> None:
         super().__init__()
         encoders_list = [
             Convolution(
@@ -74,9 +72,7 @@ class MultiScaleEncoder2d(nn.Module):
                 for in_ch, out_ch in zip(config["in_channels"], config["out_channels"])
             ]
         )
-        self.downsampler = nn.MaxPool2d(
-            kernel_size=2, stride=2, padding=0, return_indices=False
-        )
+        self.downsampler = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, return_indices=False)
 
     def forward(self, x: torch.Tensor):
         x = self.conv1(x)
@@ -90,7 +86,7 @@ class MultiScaleEncoder2d(nn.Module):
 
 
 class MultiScale2DPermuteConcat(nn.Module):
-    """MultiScale2DPermuteConcat"""
+    """MultiScale2DPermuteConcat."""
 
     def __init__(self, config: Dict) -> None:
         super().__init__()
@@ -405,9 +401,7 @@ class MultiScale2DPermuteConcat(nn.Module):
                 dec_lat_fusion_out.append(dec_lat)
             else:  # other decoder takes input from adjacent encoder and previous decoder(upsampled to match HW)
                 dec_ap = ap_decoder_2d(
-                    torch.cat(
-                        (ap_upsampler(dec_ap_fusion_out[i - 1]), encoded_ap[i]), dim=1
-                    )
+                    torch.cat((ap_upsampler(dec_ap_fusion_out[i - 1]), encoded_ap[i]), dim=1)
                 )
 
                 dec_lat = lat_decoder_2d(

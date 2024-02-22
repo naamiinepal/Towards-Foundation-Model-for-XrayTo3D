@@ -1,12 +1,12 @@
 import pandas as pd
 import torch
+import wandb
 from monai.losses.dice import DiceCELoss, DiceLoss
 from monai.metrics.meandice import DiceMetric
 from monai.transforms.compose import Compose
-from monai.transforms.post.array import AsDiscrete, Activations
+from monai.transforms.post.array import Activations, AsDiscrete
 from torch.utils.data import DataLoader
 
-import wandb
 from XrayTo3DShape import (
     AtlasDeformationDataset,
     AtlasDeformationSTN,
@@ -100,9 +100,5 @@ for i in range(NUM_EPOCHS):
     acc = dice_metric_evaluator.aggregate()
     dice_metric_evaluator.reset()
     if WANDB_ON:
-        wandb.log(
-            {"loss": loss.item(), "accuracy": acc.item(), "1-NGCC": ngcc_loss.item()}
-        )
-    print(
-        f"loss {loss.item():.4f} accuracy {acc.item():.4f} NGCC {ngcc_loss.item():.4f}"
-    )
+        wandb.log({"loss": loss.item(), "accuracy": acc.item(), "1-NGCC": ngcc_loss.item()})
+    print(f"loss {loss.item():.4f} accuracy {acc.item():.4f} NGCC {ngcc_loss.item():.4f}")

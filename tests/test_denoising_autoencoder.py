@@ -1,9 +1,9 @@
 import pandas as pd
 import torch
+import wandb
 from torch.utils.data import DataLoader
 from tqdm import trange
 
-import wandb
 from XrayTo3DShape import (
     BaseDataset,
     CustomAutoEncoder,
@@ -46,8 +46,7 @@ def train(model, dict_key_for_training, max_epochs=10, learning_rate=1e-3):
         epoch_loss /= step
         epoch_loss_values.append(epoch_loss)
         t.set_description(
-            f"{dict_key_for_training} -- epoch {epoch + 1}"
-            + f", average loss: {epoch_loss:.4f}"
+            f"{dict_key_for_training} -- epoch {epoch + 1}" + f", average loss: {epoch_loss:.4f}"
         )
     return model, epoch_loss_values
 
@@ -77,9 +76,9 @@ ds = BaseDataset(
 )
 data_loader = DataLoader(ds, batch_size=2)
 ap, lat, seg = next(iter(data_loader))
-out, latent_vec = model(seg['gaus'])
+out, latent_vec = model(seg["gauss"])
 original = seg["orig"]
-noisy = seg["gaus"]
+noisy = seg["gauss"]
 printarr(original, noisy, out, latent_vec)
 
-model, epoch_loss_vals = train(model, "gaus", learning_rate=lr, max_epochs=100)
+model, epoch_loss_vals = train(model, "gauss", learning_rate=lr, max_epochs=100)

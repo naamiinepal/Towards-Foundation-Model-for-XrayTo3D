@@ -1,35 +1,34 @@
-"""
-run inference using model checkpoint.
+"""Run inference using model checkpoint.
+
 save metrics to csv log, predictions as nifti
 """
 import argparse
 import os
 from pathlib import Path
 
-import torch
 import pytorch_lightning as pl
+import torch
 from torch.utils.data import DataLoader
 
 import XrayTo3DShape
 from XrayTo3DShape import (
-    MetricsLogger,
     AnglePerturbationMetricsLogger,
+    CustomAutoEncoder,
+    MetricsLogger,
     NiftiPredictionWriter,
+    TLPredictorExperiment,
+    anatomy_resolution_dict,
+    get_anatomy_from_path,
     get_dataset,
     get_latest_checkpoint,
     get_model,
     get_transform_from_model_name,
     model_experiment_dict,
-    TLPredictorExperiment,
-    CustomAutoEncoder,
-    anatomy_resolution_dict,
-    get_anatomy_from_path,
 )
 
 
 def parse_evaluation_arguments():
-    """read options for running inference from
-    model checkpoint.
+    """Read options for running inference from model checkpoint.
 
     Returns:
         dict: (option,value)
@@ -54,8 +53,7 @@ def parse_evaluation_arguments():
 
 
 def update_args(args):
-    """infer/fill-in reasonable defaults from
-    partial arguments
+    """Infer/fill-in reasonable defaults from partial arguments.
 
     Args:
         args (dict): (key,value)
@@ -69,20 +67,14 @@ def update_args(args):
     if args.output_path is None:
         args.output_path = str(Path(args.ckpt_path) / "../evaluation")
     if args.ckpt_type == "best":
-        args.ckpt_path = get_latest_checkpoint(
-            args.ckpt_path, checkpoint_regex="epoch=*.ckpt"
-        )
+        args.ckpt_path = get_latest_checkpoint(args.ckpt_path, checkpoint_regex="epoch=*.ckpt")
     elif args.ckpt_type == "latest":
-        args.ckpt_path = get_latest_checkpoint(
-            args.ckpt_path, checkpoint_regex="last*.ckpt"
-        )
+        args.ckpt_path = get_latest_checkpoint(args.ckpt_path, checkpoint_regex="last*.ckpt")
     else:
-        raise ValueError(
-            f"ckpt_type can be either `best` or `latest` but got {args.ckpt_type}"
-        )
+        raise ValueError(f"ckpt_type can be either `best` or `latest` but got {args.ckpt_type}")
     # assert resolution and size agree for each anatomy
     args.anatomy = get_anatomy_from_path(args.testpaths)
-    # this requirement does not make sense when data is a patch 
+    # this requirement does not make sense when data is a patch
     # orig_size, orig_res = anatomy_resolution_dict[args.anatomy]
     # assert int(args.image_size * args.res) == int(
     #     orig_size * orig_res
@@ -127,21 +119,17 @@ else:
 evaluation_callbacks = [nifti_saver, metrics_saver]
 
 model_architecture = get_model(model_name=args.model_name, image_size=args.image_size)
-model_module: pl.LightningModule = getattr(
-    XrayTo3DShape.experiments, args.experiment_name
-)(model=model_architecture)
+model_module: pl.LightningModule = getattr(XrayTo3DShape.experiments, args.experiment_name)(
+    model=model_architecture
+)
 
 if args.experiment_name == TLPredictorExperiment.__name__:
     print(f"loading autoencoder from {args.load_autoencoder_from}")
-    ae_model = get_model(
-        model_name=CustomAutoEncoder.__name__, image_size=args.image_size
-    )
+    ae_model = get_model(model_name=CustomAutoEncoder.__name__, image_size=args.image_size)
     if Path(args.load_autoencoder_from).exists():
         checkpoint = torch.load(args.load_autoencoder_from)
     else:
-        raise ValueError(
-            f"autoencoder checkpoint {args.load_autoencoder_from} does not exist"
-        )
+        raise ValueError(f"autoencoder checkpoint {args.load_autoencoder_from} does not exist")
     for key in list(checkpoint["state_dict"].keys()):
         # model.layer1.conv1 -> layer1.conv1
         modified_key = key.replace("model.", "")
@@ -178,7 +166,5 @@ trainer.predict(
     model=model_module,
     dataloaders=test_loader,
     return_predictions=False,
-    ckpt_path=None
-    if args.experiment_name == TLPredictorExperiment.__name__
-    else args.ckpt_path,
+    ckpt_path=None if args.experiment_name == TLPredictorExperiment.__name__ else args.ckpt_path,
 )

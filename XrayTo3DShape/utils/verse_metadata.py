@@ -1,4 +1,4 @@
-"""query verse metadata"""
+"""Query verse metadata."""
 import math
 import warnings
 from typing import Dict
@@ -10,14 +10,12 @@ from .misc_utils import split_subject_vertebra_id
 
 
 class VerseExcelSheet:
-    """Reads the annotation excel sheet and allows to query vertebra level, shape, grade"""
+    """Reads the annotation excel sheet and allows to query vertebra level, shape, grade."""
 
     n_rows, n_cols = 161, 48
     data_frame: pd.DataFrame
 
-    def __init__(
-        self, annotations_filename="metadata/ryai190138_appendixe1.xlsx"
-    ) -> None:
+    def __init__(self, annotations_filename="metadata/ryai190138_appendixe1.xlsx") -> None:
         warnings.filterwarnings("ignore", category=UserWarning)
         self.annotations_filename = annotations_filename
         # UserWarning: Unknown extension is not supported and will be removed
@@ -45,11 +43,11 @@ class VerseExcelSheet:
         return {VerseKeys.SUBJECT: subject_id, VerseKeys.VERTEBRA: vertebra_id}
 
     def has_foreign_material(self, vertebra_keys: Dict):
-        """vertebra has cement, screws etc?"""
+        """Vertebra has cement, screws etc?"""
         return self.get_shape(vertebra_keys) == VerseKeys.FOREIGN_MATERIAL
 
     def get_shape(self, vertebra_keys: Dict) -> str:
-        """Wedge, Concave, Crush, Normal"""
+        """Wedge, Concave, Crush, Normal."""
         if isinstance(vertebra_keys, str):
             vertebra_keys = self.get_vertebra_keys(vertebra_keys)
         vertebra_name = self.get_vertebra_name(vertebra_keys[VerseKeys.VERTEBRA])
@@ -61,7 +59,7 @@ class VerseExcelSheet:
         return self.shapeid_to_shape_key[self._cast_to_string(shape_id)]
 
     def get_severity(self, vertebra_keys: Dict) -> str:
-        """Mild, Moderate, Severe"""
+        """Mild, Moderate, Severe."""
         vertebra_name = self.get_vertebra_name(vertebra_keys[VerseKeys.VERTEBRA])
 
         if vertebra_name.startswith("C"):
@@ -75,15 +73,15 @@ class VerseExcelSheet:
         return self._get_row_item(vertebra_keys, "CT_device")
 
     def get_ct_resolution(self, vertebra_keys: Dict):
-        """resolution along axial direction"""
+        """Resolution along axial direction."""
         return self._get_row_item(vertebra_keys, "Res")
 
     def get_bone_mass_density(self, vertebra_keys: Dict):
-        """Bone Mass Density"""
+        """Bone Mass Density."""
         return self._get_row_item(vertebra_keys, "BMD")
 
     def get_vertebra_level(self, vertebra_keys: Dict):
-        """Cervical, Thoracic, Lumbar"""
+        """Cervical, Thoracic, Lumbar."""
         vertebra_id = vertebra_keys[VerseKeys.VERTEBRA]
 
         if vertebra_id >= 1 and vertebra_id <= DatasetConsts.LAST_CERVICAL:
@@ -95,10 +93,7 @@ class VerseExcelSheet:
         ):
             return VerseKeys.THORACIC
 
-        if (
-            vertebra_id > DatasetConsts.LAST_THORACIC
-            and vertebra_id <= DatasetConsts.LAST_LUMBAR
-        ):
+        if vertebra_id > DatasetConsts.LAST_THORACIC and vertebra_id <= DatasetConsts.LAST_LUMBAR:
             return VerseKeys.LUMBAR
 
         if vertebra_id == 25:
@@ -123,8 +118,9 @@ class VerseExcelSheet:
 
     @staticmethod
     def get_vertebra_name(vertebra_number: int) -> str:
-        """returns T1-T12, L1-L5, given vertebra number
-        vertebra are numbered from 1-25. Thoracic range 8-19.Lumbar range 20-25
+        """Returns T1-T12, L1-L5, given vertebra number vertebra are numbered from 1-25.
+
+        Thoracic range 8-19.Lumbar range 20-25
         >>> get_vertebra_name(5)
         'C5'
         >>> get_vertebra_name(10)
@@ -142,9 +138,7 @@ class VerseExcelSheet:
             # Lumbar vertebra
             return f"L{vertebra_number - 19}"
         else:
-            raise ValueError(
-                f"Vertebra number out-of-range. Recieved {vertebra_number}"
-            )
+            raise ValueError(f"Vertebra number out-of-range. Received {vertebra_number}")
 
     @staticmethod
     def _get_shape_column_name(vertebra_name: str):
@@ -156,24 +150,19 @@ class VerseExcelSheet:
 
     @staticmethod
     def _get_grade_column_name(vertebra_name: str):
-        """T1 -> T1_fx-g
-        >>> get_grade_column_name('T1')
-        'T1_fx-g'
-        """
+        """T1 -> T1_fx-g >>> get_grade_column_name('T1') 'T1_fx-g'."""
         return f"{vertebra_name}_fx-g"
 
     def _get_row_item(self, vertebra_keys: Dict, column_name):
-        """get whole row"""
+        """Get whole row."""
         subject_details = self._get_excel_row(vertebra_keys)
         return subject_details[column_name].values[0]
 
     def _get_excel_row(self, vertebra_keys):
-        return self.data_frame.loc[
-            self.data_frame.verse_ID == vertebra_keys[VerseKeys.SUBJECT]
-        ]
+        return self.data_frame.loc[self.data_frame.verse_ID == vertebra_keys[VerseKeys.SUBJECT]]
 
     def _read_extra_annotations(self):
-        """read metadata from xls"""
+        """Read metadata from xls."""
         # read annotations
         annotations = pd.read_excel(self.annotations_filename)
 

@@ -1,8 +1,9 @@
-"""generate evaluation script"""
+"""Generate evaluation script."""
 import sys
-import wandb
-from XrayTo3DShape import filter_wandb_run, MODEL_NAMES, get_run_from_model_name
 
+import wandb
+
+from XrayTo3DShape import MODEL_NAMES, filter_wandb_run, get_run_from_model_name
 
 ANATOMY = "vertebra"
 tags = ["dropout", "model-compare"]

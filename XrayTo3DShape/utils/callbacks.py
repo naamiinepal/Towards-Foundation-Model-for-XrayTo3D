@@ -1,13 +1,12 @@
-"""custom pytorch-lightning callbacks for saving model prediction
-and evaluating metrics."""
+"""Custom pytorch-lightning callbacks for saving model prediction and evaluating metrics."""
 import copy
 import csv
 from pathlib import Path
-from typing import Any, Optional, Sequence
+from typing import Any, Literal, Optional, Sequence
 
 import numpy as np
-import torch
 import pytorch_lightning as pl
+import torch
 from monai.data.nifti_saver import NiftiSaver
 from monai.metrics.hausdorff_distance import HausdorffDistanceMetric
 from monai.metrics.meandice import DiceMetric
@@ -17,14 +16,15 @@ from surface_distance.metrics import (
     compute_surface_distances,
     compute_surface_overlap_at_tolerance,
 )
-from typing_extensions import Literal
 
 from .io_utils import get_nifti_stem, to_numpy
 
 
 class NiftiPredictionWriter(BasePredictionWriter):
     """Save model prediction as nifti.
-    Inherits from pytorch-lightning callbacks for Writing model prediction"""
+
+    Inherits from pytorch-lightning callbacks for Writing model prediction
+    """
 
     def __init__(
         self,
@@ -34,7 +34,7 @@ class NiftiPredictionWriter(BasePredictionWriter):
         save_gt=True,
         image_size=64,
         resolution=1.5,
-        save_input=True
+        save_input=True,
     ) -> None:
         super().__init__(write_interval)
         self.output_dir = output_dir
@@ -101,9 +101,7 @@ class NiftiPredictionWriter(BasePredictionWriter):
         )
         # save the origin information too, which resides in the last column of the `affine matrix`
 
-        metadict["affine"][:, :, -1] = torch.tensor(
-            original_meta_dict["affine"][:, :, -1]
-        )
+        metadict["affine"][:, :, -1] = torch.tensor(original_meta_dict["affine"][:, :, -1])
         if self.save_pred:
             self.pred_nifti_saver.save_batch(prediction["pred"], metadict)
         if self.save_gt:
@@ -111,8 +109,7 @@ class NiftiPredictionWriter(BasePredictionWriter):
 
 
 class MetricsLogger(BasePredictionWriter):
-    """evaluate various metrics from model prediction
-    and save to log file"""
+    """Evaluate various metrics from model prediction and save to log file."""
 
     def __init__(
         self,
@@ -123,9 +120,7 @@ class MetricsLogger(BasePredictionWriter):
     ) -> None:
         super().__init__(write_interval)
         Path(output_dir).mkdir(exist_ok=True, parents=True)
-        self.filestream_writer = csv.writer(
-            open(Path(output_dir) / "metric-log.csv", "w")
-        )
+        self.filestream_writer = csv.writer(open(Path(output_dir) / "metric-log.csv", "w"))
         header = ["subject-id", "DSC", "ASD", "HD95", "NSD"]
         self.filestream_writer.writerow(header)
         # metric
@@ -143,10 +138,8 @@ class MetricsLogger(BasePredictionWriter):
         )[0]
 
     def get_filename(self, prediction: Any):
-        """this will be column name identifier for each row"""
-        return [
-            get_nifti_stem(p) for p in prediction["seg_meta_dict"]["filename_or_obj"]
-        ]
+        """This will be column name identifier for each row."""
+        return [get_nifti_stem(p) for p in prediction["seg_meta_dict"]["filename_or_obj"]]
 
     def write_on_batch_end(
         self,
@@ -168,16 +161,14 @@ class MetricsLogger(BasePredictionWriter):
         for row in zip(subjects, dsc, asd, hd95, nsd):
             self.filestream_writer.writerow(
                 [
-                    f"{item:.2f}"
-                    if isinstance(item, (np.ndarray, np.float64, float))
-                    else item
+                    f"{item:.2f}" if isinstance(item, (np.ndarray, np.float64, float)) else item
                     for item in row
                 ]
             )
 
 
 class AnglePerturbationMetricsLogger(MetricsLogger):
-    """additionally record the angle perturbation in addition to metrics"""
+    """Additionally record the angle perturbation in addition to metrics."""
 
     def __init__(
         self,
@@ -210,9 +201,7 @@ class AnglePerturbationMetricsLogger(MetricsLogger):
         for row in zip(subjects, dsc, asd, hd95, nsd):
             self.filestream_writer.writerow(
                 [
-                    f"{item:.2f}"
-                    if isinstance(item, (np.ndarray, np.float64, float))
-                    else item
+                    f"{item:.2f}" if isinstance(item, (np.ndarray, np.float64, float)) else item
                     for item in row
                 ]
             )

@@ -1,7 +1,8 @@
-import pandas as pd
 import argparse
 from argparse import ArgumentParser
 from pathlib import Path
+
+import pandas as pd
 
 parser = ArgumentParser()
 parser.add_argument("first_dir")
@@ -27,9 +28,7 @@ for csv_type in csvs:
         first_csv for first_csv in first_dir_csvs if str(first_csv).endswith(csv_suffix)
     )
     second_csv = next(
-        second_csv
-        for second_csv in second_dir_csvs
-        if str(second_csv).endswith(csv_suffix)
+        second_csv for second_csv in second_dir_csvs if str(second_csv).endswith(csv_suffix)
     )
 
     print(first_csv.name, second_csv.name)

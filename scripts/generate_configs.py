@@ -1,7 +1,6 @@
 import yaml
 
-from XrayTo3DShape import update_multiple_key_values_in_nested_dict, config_template
-
+from XrayTo3DShape import config_template, update_multiple_key_values_in_nested_dict
 
 ctpelvic_dataset = {
     "bone": "hip",
@@ -13,9 +12,7 @@ ctpelvic_dataset = {
     "seg": "hip.nii.gz",
 }
 
-ctpelvic_hip = update_multiple_key_values_in_nested_dict(
-    config_template, ctpelvic_dataset
-)
+ctpelvic_hip = update_multiple_key_values_in_nested_dict(config_template, ctpelvic_dataset)
 
 with open("configs/full/ctpelvic_hip.yaml", "w") as f:
     yaml.dump(ctpelvic_hip, f)

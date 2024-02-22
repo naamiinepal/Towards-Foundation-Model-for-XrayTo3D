@@ -37,4 +37,4 @@ fig = plt.figure(figsize=(4, 4))
 plt.axis("off")
 plt.imshow(lat_img.squeeze(), cmap="gray")
 
-plt.savefig('tests/ngcc_loss.png')
+plt.savefig("tests/ngcc_loss.png")

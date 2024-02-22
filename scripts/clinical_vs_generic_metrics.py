@@ -1,11 +1,12 @@
 import argparse
 from pathlib import Path
-import scipy as sp
-import scipy.stats as stats
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scienceplots
+import scipy as sp
+import scipy.stats as stats
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
@@ -35,7 +36,6 @@ def plot_ci_bootstrap(xs, ys, resid, nboot=500, ax=None):
     ----------
     .. [1] J. Stults. "Visualizing Confidence Intervals", Various Consequences.
        http://www.variousconsequences.com/2010/02/visualizing-confidence-intervals.html
-
     """
     if ax is None:
         ax = plt.gca()
@@ -91,9 +91,7 @@ ROWS = [
 
 
 generalized_metrics_template = "runs/2d-3d-benchmark/{run_id}/evaluation/metric-log.csv"
-clinical_parameters_template = (
-    "runs/2d-3d-benchmark/{run_id}/evaluation/{clinical_log_name}"
-)
+clinical_parameters_template = "runs/2d-3d-benchmark/{run_id}/evaluation/{clinical_log_name}"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("anatomy", choices=["hip", "vertebra", "femur", "rib"])
@@ -124,9 +122,7 @@ for model in MODEL_NAMES:
         post_fix_length = len(post_fix)  # this is actually a prefix so no negative sign
     else:
         post_fix_length = -len(post_fix)
-    generalized_metric_csv["id"] = generalized_metric_csv["subject-id"].str[
-        :post_fix_length
-    ]
+    generalized_metric_csv["id"] = generalized_metric_csv["subject-id"].str[:post_fix_length]
     merged_csv = pd.merge(clinical_csv, generalized_metric_csv, on="id", how="left")
 
     subplot_sz = 5
@@ -156,7 +152,7 @@ for model in MODEL_NAMES:
         ax[clm_idx].plot(dsc, y_pred)
         ax[clm_idx].scatter(dsc, y, s=subplot_sz * 5)
 
-        ax[clm_idx].set_title(r"$R^2={:.2f},\rho={:.2f}$".format(r2, rho), fontsize=25)
+        ax[clm_idx].set_title(rf"$R^2={r2:.2f},\rho={rho:.2f}$", fontsize=25)
         ax[clm_idx].set_xlabel(rw, fontsize=25)
         ax[clm_idx].set_ylabel(clm, fontsize=25)
         ax[clm_idx].xaxis.set_tick_params(labelsize=25)

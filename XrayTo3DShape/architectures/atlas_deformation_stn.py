@@ -11,7 +11,8 @@ from torch import nn
 
 
 class AtlasDeformationSTN(nn.Module):
-    """atlas-deformation based encoder-decoder"""
+    """Atlas-deformation based encoder-decoder."""
+
     def __init__(self, config: Dict) -> None:
         super().__init__()
         self.config = config
@@ -95,9 +96,7 @@ class AtlasDeformationSTN(nn.Module):
         return layers
 
     def forward(self, ap, lat, atlas_seg):
-        atlas_seg_scaled = F.interpolate(
-            atlas_seg.clone(), scale_factor=1.0 / 4.0, mode="nearest"
-        )
+        atlas_seg_scaled = F.interpolate(atlas_seg.clone(), scale_factor=1.0 / 4.0, mode="nearest")
 
         out_ap = self.ap_encoder(ap)
         out_lat = self.lat_encoder(lat)
@@ -109,9 +108,7 @@ class AtlasDeformationSTN(nn.Module):
             dim=1,
         )  # add new dimension assuming PIR orientation
         # print('fused cube',fused_cube.shape,'atlas seg',atlas_seg.shape)
-        out = torch.cat(
-            [fused_cube, atlas_seg_scaled], dim=1
-        )  # concatenate along channels
+        out = torch.cat([fused_cube, atlas_seg_scaled], dim=1)  # concatenate along channels
         out = self.affine_decoder(out)
         # encoder_out = torch.cat([self.ap_encoder(ap), self.lat_encoder(lat)],dim=1)
         # affine_in = self.affine_decoder(encoder_out)

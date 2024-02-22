@@ -11,4 +11,3 @@ python evaluate.py  --testpaths configs/domain_shift_eval/CTPelvic1k_CLINIC-META
 python evaluate.py  --testpaths configs/domain_shift_eval/CTPelvic1k_CLINIC-METAL-hips-DRR-full.csv --gpu 0 --image_size 128 --batch_size 8 --accelerator gpu --res 2.25 --model_name UNETR --ckpt_path runs/2d-3d-benchmark/762ji1eb/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/762ji1eb/checkpoints/../domain_shift_clinic_metal
 
 python evaluate.py  --testpaths configs/domain_shift_eval/CTPelvic1k_CLINIC-METAL-hips-DRR-full.csv --gpu 0 --image_size 128 --batch_size 8 --accelerator gpu --res 2.25 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/gzekjp1r/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/gzekjp1r/checkpoints/../domain_shift_clinic_metal
-

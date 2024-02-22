@@ -1,6 +1,7 @@
-"""generate data sample filepaths split into train, val, test sets"""
+"""Generate data sample filepaths split into train, val, test sets."""
 from pathlib import Path
 from typing import Sequence, Union
+
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -15,24 +16,20 @@ def get_individual_fullpaths(
     lat_pattern="*lat.png",
     seg_pattern="*msk.nii.gz",
 ):
-    """return ap, lat, seg filepaths"""
+    """Return ap, lat, seg filepaths."""
     derivatives_path = (
-        Path(config.subjects.subject_basepath).resolve()
-        / f"{subject_dir}"
-        / "derivatives"
+        Path(config.subjects.subject_basepath).resolve() / f"{subject_dir}" / "derivatives"
     )
     if perturbation_angle is None:
         xray_lat_basepath = derivatives_path / "xray_from_ct"
     else:
         xray_lat_basepath = (
-            derivatives_path
-            / "xray_from_ct_angle_perturbation"
-            / str(perturbation_angle)
+            derivatives_path / "xray_from_ct_angle_perturbation" / str(perturbation_angle)
         )
     if perturbation_angle is None:
         xray_ap_basepath = derivatives_path / "xray_from_ct"
     else:
-        xray_ap_basepath = derivatives_path/'xray_from_ct_angle_perturbation'
+        xray_ap_basepath = derivatives_path / "xray_from_ct_angle_perturbation"
 
     seg_roi_basepath = derivatives_path / "seg_roi"
     print(xray_ap_basepath, xray_lat_basepath, seg_roi_basepath)
@@ -51,7 +48,7 @@ def get_fullpaths(
     lat_pattern,
     seg_pattern,
 ):
-    """return ap, lat, seg paths as dict"""
+    """Return ap, lat, seg paths as dict."""
     print(ap_pattern, lat_pattern, seg_pattern)
     ap, lat, seg = [], [], []
     if config["dataset"] == "verse":
@@ -92,34 +89,33 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("config_file")
-    parser.add_argument('--anatomy')
+    parser.add_argument("--anatomy")
 
     args = parser.parse_args()
-    if args.anatomy == 'hip':
-        args.ap = '*hip-ap.png'
-        args.lat = '*hip-lat.png'
-        args.seg = '*hip_msk.nii.gz'
-    elif args.anatomy == 'rib':
-        args.ap = '*rib-ap.png'
-        args.lat = '*rib-lat.png'
-        args.seg = '*rib_msk.nii.gz'
-    elif args.anatomy == 'vertebra':
-        args.ap = '*ap.png'
-        args.lat = '*lat.png'
-        args.seg = '*msk.nii.gz'
-    elif args.anatomy == 'femur':
-        args.ap = '*femur*-ap.png'
-        args.lat = '*femur*-lat.png'
-        args.seg = '*femur*_msk.nii.gz'
+    if args.anatomy == "hip":
+        args.ap = "*hip-ap.png"
+        args.lat = "*hip-lat.png"
+        args.seg = "*hip_msk.nii.gz"
+    elif args.anatomy == "rib":
+        args.ap = "*rib-ap.png"
+        args.lat = "*rib-lat.png"
+        args.seg = "*rib_msk.nii.gz"
+    elif args.anatomy == "vertebra":
+        args.ap = "*ap.png"
+        args.lat = "*lat.png"
+        args.seg = "*msk.nii.gz"
+    elif args.anatomy == "femur":
+        args.ap = "*femur*-ap.png"
+        args.lat = "*femur*-lat.png"
+        args.seg = "*femur*_msk.nii.gz"
     else:
-        raise ValueError(f'anatomy {args.anatomy} is not valid. Expected one of hip, femur, vertebra, rib')
-    
+        raise ValueError(
+            f"anatomy {args.anatomy} is not valid. Expected one of hip, femur, vertebra, rib"
+        )
 
     print(args)
     dataset = (
-        "verse"
-        if str(args.config_file).split("-")[0].lower().startswith("verse")
-        else "others"
+        "verse" if str(args.config_file).split("-")[0].lower().startswith("verse") else "others"
     )
 
     # config_path = "configs/test/Verse2020-DRR-test.yaml"
@@ -145,18 +141,14 @@ if __name__ == "__main__":
     train_subjects, val_subjects = train_test_split(
         train_subjects, test_size=0.15, shuffle=True, random_state=SEED
     )
-    print(
-        f"train {len(train_subjects)} val {len(val_subjects)} test {len(test_subjects)}"
-    )
+    print(f"train {len(train_subjects)} val {len(val_subjects)} test {len(test_subjects)}")
 
-    train_paths = get_fullpaths(
-        train_subjects, config, None, args.ap, args.lat, args.seg
-    )
+    train_paths = get_fullpaths(train_subjects, config, None, args.ap, args.lat, args.seg)
     val_paths = get_fullpaths(val_subjects, config, None, args.ap, args.lat, args.seg)
     train_val_paths = get_fullpaths(np.concatenate((train_subjects, val_subjects)), config, None, args.ap, args.lat, args.seg)  # type: ignore
 
     # take perturbation angles into account
-    for angle in [1,2,5,10]:
+    for angle in [1, 2, 5, 10]:
         test_paths = {"ap": [], "lat": [], "seg": []}
 
         perturbation_paths = get_fullpaths(
@@ -189,6 +181,6 @@ if __name__ == "__main__":
 
         df_test.to_csv(
             Path(config_path)
-            .with_name(Path(config_path).stem + "_" + 'test' + '_' + str(angle))
+            .with_name(Path(config_path).stem + "_" + "test" + "_" + str(angle))
             .with_suffix(".csv")
         )

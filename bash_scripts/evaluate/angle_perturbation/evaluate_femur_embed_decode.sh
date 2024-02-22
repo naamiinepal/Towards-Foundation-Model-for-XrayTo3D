@@ -32,4 +32,3 @@ python evaluate.py --testpaths $testpaths --gpu $gpu --image_size $img_size --ba
 testpaths=configs/angle_perturbation/TotalSegmentor-femur-left-DRR-30k_test_10.csv
 angle=10
 python evaluate.py --testpaths $testpaths --gpu $gpu --image_size $img_size --batch_size $batch_size --accelerator gpu --res $res --model_name TLPredictor --ckpt_path runs/$project_name/$tlencoder_run_id/checkpoints --load_autoencoder_from runs/$project_name/$autoencoder_run_id/checkpoints/last.ckpt --output_path runs/$project_name/$tlencoder_run_id/checkpoints/../angle_perturbation/$angle
-

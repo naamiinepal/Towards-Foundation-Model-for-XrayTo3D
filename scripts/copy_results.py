@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-
 import wandb
+
 from XrayTo3DShape import filter_wandb_run, get_run_from_model_name
 
 parser = argparse.ArgumentParser()
@@ -23,9 +23,7 @@ if len(runs) == 0:
 
 SUBDIR = "evaluation"
 EVAL_LOG_CSV_PATH_TEMPLATE = "/mnt/SSD0/mahesh-home/xrayto3D-benchmark/runs/2d-3d-benchmark/{run_id}/{subdir}/metric-log.csv"
-OUT_LOG_CSV_PATH_TEMPLATE = (
-    "results/benchmarking/{anatomy}/{tag}/{model_name}/metric-log.csv"
-)
+OUT_LOG_CSV_PATH_TEMPLATE = "results/benchmarking/{anatomy}/{tag}/{model_name}/metric-log.csv"
 MODEL_NAMES = [
     "SwinUNETR",
     "UNETR",
@@ -60,9 +58,7 @@ for model in MODEL_NAMES:
 
 # save into a single csv
 MERGED_DF_FILENAME_TEMPLATE = "results/challengeR/{anatomy}/{tag}/metric-log.csv"
-merged_df_out_file = MERGED_DF_FILENAME_TEMPLATE.format(
-    anatomy=args.anatomy, tag=args.tags[0]
-)
+merged_df_out_file = MERGED_DF_FILENAME_TEMPLATE.format(anatomy=args.anatomy, tag=args.tags[0])
 Path(merged_df_out_file).parent.mkdir(parents=True, exist_ok=True)
 merged_df = pd.concat(dataframes, join="inner").sort_index()
 merged_df.to_csv(merged_df_out_file, header=True, index=False)

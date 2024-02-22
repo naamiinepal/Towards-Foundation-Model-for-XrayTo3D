@@ -1,10 +1,10 @@
-"""additional metadata"""
+"""Additional metadata."""
 import sys
 from pathlib import Path
 
 import pandas as pd
-
 import wandb
+
 from XrayTo3DShape import (
     MODEL_NAMES,
     VerseExcelSheet,
@@ -15,22 +15,18 @@ from XrayTo3DShape import (
 
 
 def get_shape(row):
-    """shape lambda"""
+    """Shape lambda."""
     return verse_metadata.get_shape(verse_metadata.get_vertebra_keys(row["subject-id"]))
 
 
 def get_severity(row):
-    """severity lambda"""
-    return verse_metadata.get_severity(
-        verse_metadata.get_vertebra_keys(row["subject-id"])
-    )
+    """Severity lambda."""
+    return verse_metadata.get_severity(verse_metadata.get_vertebra_keys(row["subject-id"]))
 
 
 def get_vertebra_level(row):
-    """vertebra level"""
-    return verse_metadata.get_vertebra_level(
-        verse_metadata.get_vertebra_keys(row["subject-id"])
-    )
+    """Vertebra level."""
+    return verse_metadata.get_vertebra_level(verse_metadata.get_vertebra_keys(row["subject-id"]))
 
 
 if __name__ == "__main__":

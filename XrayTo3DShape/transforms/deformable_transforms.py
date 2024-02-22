@@ -1,16 +1,16 @@
 """Work in Progress: Data transformation pipeline for Atlas-deformation based architecture"""
-from monai.transforms.spatial.dictionary import ResizeD, SpacingD, OrientationD
-from monai.transforms.intensity.dictionary import ThresholdIntensityD, ScaleIntensityD
-from monai.transforms.io.dictionary import LoadImageD
-from monai.transforms.utility.dictionary import EnsureChannelFirstD
-from monai.transforms.croppad.dictionary import ResizeWithPadOrCropD
-from monai.transforms.compose import Compose
-from monai.data.image_reader import PILReader
 import numpy as np
+from monai.data.image_reader import PILReader
+from monai.transforms.compose import Compose
+from monai.transforms.croppad.dictionary import ResizeWithPadOrCropD
+from monai.transforms.intensity.dictionary import ScaleIntensityD, ThresholdIntensityD
+from monai.transforms.io.dictionary import LoadImageD
+from monai.transforms.spatial.dictionary import OrientationD, ResizeD, SpacingD
+from monai.transforms.utility.dictionary import EnsureChannelFirstD
 
 
 def get_atlas_deformation_transforms(size=64, resolution=1.5):
-    """transformation pipeline for Atlas-deformation based model architecture"""
+    """Transformation pipeline for Atlas-deformation based model architecture."""
     ap_transform = Compose(
         [
             LoadImageD(
@@ -71,7 +71,7 @@ def get_atlas_deformation_transforms(size=64, resolution=1.5):
                 pixdim=(resolution, resolution, resolution),
                 mode="nearest",
                 padding_mode="zeros",
-                align_corners=True
+                align_corners=True,
             ),
             ResizeWithPadOrCropD(keys={"seg"}, spatial_size=(size, size, size)),
             OrientationD(keys={"seg"}, axcodes="PIR"),
@@ -94,7 +94,7 @@ def get_atlas_deformation_transforms(size=64, resolution=1.5):
                 pixdim=(resolution, resolution, resolution),
                 mode="nearest",
                 padding_mode="zeros",
-                align_corners=True
+                align_corners=True,
             ),
             ResizeWithPadOrCropD(keys={"atlas"}, spatial_size=(size, size, size)),
             OrientationD(keys={"atlas"}, axcodes="PIR"),
@@ -111,7 +111,8 @@ def get_atlas_deformation_transforms(size=64, resolution=1.5):
 
 
 def get_deformation_transforms(size=64, resolution=1.5):
-    """transformation pipeline for image registration.
+    """Transformation pipeline for image registration.
+
     Fixed image and moving image transforms.
     """
     fixed_transform = Compose(

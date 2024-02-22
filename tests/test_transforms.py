@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 
-from XrayTo3DShape import get_nonkasten_transforms, get_projectionslices_from_3d, create_figure
+from XrayTo3DShape import (
+    create_figure,
+    get_nonkasten_transforms,
+    get_projectionslices_from_3d,
+)
 
 transforms = get_nonkasten_transforms()
 ap_transform, lat_transform, seg_transform = (
@@ -36,4 +40,4 @@ fig, axes = create_figure(*seg_slices)
 for ax, img in zip(axes, seg_slices):
     ax.imshow(img, cmap=plt.cm.gray)
 
-plt.savefig('tests/transforms.png')
+plt.savefig("tests/transforms.png")

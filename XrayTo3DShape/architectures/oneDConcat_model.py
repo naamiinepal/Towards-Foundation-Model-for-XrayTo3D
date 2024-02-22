@@ -8,8 +8,8 @@ from .utils import calculate_1d_vec_channels
 
 
 class OneDConcat(nn.Module):
-    """
-    The idea of this model is to encode each of the PA and LAT images into 1D vectors.
+    """The idea of this model is to encode each of the PA and LAT images into 1D vectors.
+
     These are then concatenated and decoded into a 3D segmentation.
     Chen, Chih-Chia, and Yu-Hua Fang. "Using bi-planar x-ray images to reconstruct vertebra
     by the convolution neural network.

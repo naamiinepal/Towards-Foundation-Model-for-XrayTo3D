@@ -53,4 +53,3 @@ python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-femur-
 python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-femur-left-DRR-30k_test_5.csv --gpu 0 --image_size 128 --batch_size 1 --accelerator gpu --res 1.0 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/0hoo4r74/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/0hoo4r74/checkpoints/../angle_perturbation/5
 
 python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-femur-left-DRR-30k_test_10.csv --gpu 0 --image_size 128 --batch_size 1 --accelerator gpu --res 1.0 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/0hoo4r74/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/0hoo4r74/checkpoints/../angle_perturbation/10
-

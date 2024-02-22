@@ -53,4 +53,3 @@ python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-hips-D
 python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-hips-DRR-full_test_5.csv --gpu 0 --image_size 128 --batch_size 1 --accelerator gpu --res 2.25 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/gzekjp1r/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/gzekjp1r/checkpoints/../angle_perturbation/5
 
 python evaluate.py  --testpaths configs/angle_perturbation/TotalSegmentor-hips-DRR-full_test_10.csv --gpu 0 --image_size 128 --batch_size 1 --accelerator gpu --res 2.25 --model_name SwinUNETR --ckpt_path runs/2d-3d-benchmark/gzekjp1r/checkpoints --ckpt_type latest --gpu 0 --output_path runs/2d-3d-benchmark/gzekjp1r/checkpoints/../angle_perturbation/10
-
